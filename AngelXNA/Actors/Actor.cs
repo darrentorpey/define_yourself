@@ -666,6 +666,18 @@ namespace AngelXNA.Actors
             return !(numberSeparator == -1 || numDigits <= 0 || !bValidNumber);
         }
 
+        // adding bounding box hack
+        public virtual BoundingBox2D Bounds
+        {
+            get
+            {
+                return new BoundingBox2D(
+                Position - Size / 2,
+                Position + Size / 2);
+            }
+        }
+
+
         [ConsoleMethod]
         public static Actor Create()
         {

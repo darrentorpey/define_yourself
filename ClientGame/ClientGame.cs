@@ -11,6 +11,7 @@ using Microsoft.Xna.Framework.Media;
 using Microsoft.Xna.Framework.Net;
 using Microsoft.Xna.Framework.Storage;
 using AngelXNA.Infrastructure.Console;
+using AngelXNA.Infrastructure.Logging;
 using AngelXNA.Messaging;
 
 using AngelXNA;
@@ -29,6 +30,7 @@ namespace DefineYourself
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         SkillWeb skillWeb;
+        List<Actor> buildingList;
 
         public ClientGame()
         {
@@ -43,6 +45,7 @@ namespace DefineYourself
             // Set the mouse cursor to be visible
             IsMouseVisible = true;
 
+            buildingList = new List<Actor>();
         }
 
         /// <summary>
@@ -108,6 +111,8 @@ namespace DefineYourself
             building1.Position = new Vector2(-256.0f, -192.0f);
             building1.Color = new Color(0.0f, 1.0f, 1.0f);
             building1.DrawShape = Actor.ActorDrawShape.Square;
+            building1.Name = "Building 1";
+            buildingList.Add(building1);
             World.Instance.Add(building1);
 
             // building 2
@@ -116,6 +121,8 @@ namespace DefineYourself
             building2.Position = new Vector2(-256.0f, 192.0f);
             building2.Color = new Color(1.0f, 1.0f, 0.0f);
             building2.DrawShape = Actor.ActorDrawShape.Square;
+            building2.Name = "Building 2";
+            buildingList.Add(building2);
             World.Instance.Add(building2);
 
             // Player 1
@@ -178,6 +185,23 @@ namespace DefineYourself
             return null;
         }
 
+        protected void PlayerAtBuilding()
+        {
+            Actor p1 = Actor.GetNamed("Player 1");
+
+            //Actor b1 = Actor.GetNamed("Building 1");
+            foreach (Actor b1 in buildingList) {
+                // if the player is completely within the boundary of the building, it broadcasts a message
+                if  ((p1.Position.X > b1.Bounds.Min.X && p1.Position.X < b1.Bounds.Max.X) &&
+                    ((p1.Position.Y > b1.Bounds.Min.Y && p1.Position.Y < b1.Bounds.Max.Y)))
+                {
+                    Log.Instance.Log("Collision with " + b1.Name);
+                }          
+            }
+
+
+        }
+
         /// <summary>
         /// LoadContent will be called once per game and is the place to load
         /// all of your content.
@@ -209,6 +233,9 @@ namespace DefineYourself
                 this.Exit();
 
             // TODO: Add your update logic here
+
+            // Checking each tick for the player to be colliding with a building
+            PlayerAtBuilding();
 
             base.Update(gameTime);
         }
