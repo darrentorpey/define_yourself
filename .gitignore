@@ -10,9 +10,17 @@ syntax: glob
 *.orig
 *.csproj~
 TestResults.xml
+*.Debug.cachefile
+*/Content/obj
+*.sln
+*.suo
 
 syntax: regexp
 /bin/
 /obj/
 ClientGame/bin/
 ClientGame/obj/
+AngelXNA/bin/
+AngelXNA/obj/
+IntroGame/bin/
+IntroGame/obj/

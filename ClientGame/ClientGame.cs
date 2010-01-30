@@ -10,6 +10,8 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 using Microsoft.Xna.Framework.Net;
 using Microsoft.Xna.Framework.Storage;
+using AngelXNA.Infrastructure.Console;
+using AngelXNA.Messaging;
 
 using AngelXNA;
 using AngelXNA.Actors;
@@ -40,6 +42,7 @@ namespace DefineYourself
 
             // Set the mouse cursor to be visible
             IsMouseVisible = true;
+
         }
 
         /// <summary>
@@ -61,7 +64,7 @@ namespace DefineYourself
             skillWeb = new SkillWeb();
 
             // Set the camera up somewhere "above" the grid
-            World.Instance.Camera.Position = new Vector3(0.0f, 0.0f, 50.0f);
+            World.Instance.Camera.Position = new Vector3(0.0f, 0.0f, 400.0f);
 
             // Add the AngelComponent once your setup is done, and Angel will
             // take care of updating and drawing everything for you.
@@ -82,6 +85,97 @@ namespace DefineYourself
         {
             // Tim, this is for you! (plz delete this line)
 
+            // campus map
+            Actor campus = new Actor();
+            campus.Size = new Vector2(512.0f, 768.0f);
+            campus.Position = new Vector2(-256.0f, 0.0f);
+            campus.Color = new Color(1.0f, 0.0f, 0.0f);
+            campus.DrawShape = Actor.ActorDrawShape.Square;
+            World.Instance.Add(campus);
+
+
+            // tech web/tree
+            Actor tech = new Actor();
+            tech.Size = new Vector2(512.0f, 768.0f);
+            tech.Position = new Vector2(256.0f, 0.0f);
+            tech.Color = new Color(0.0f, 0.0f, 1.0f);
+            tech.DrawShape = Actor.ActorDrawShape.Square;
+            World.Instance.Add(tech);
+
+            // building 1
+            Actor building1 = new Actor();
+            building1.Size = new Vector2(100.0f, 100.0f);
+            building1.Position = new Vector2(-256.0f, -192.0f);
+            building1.Color = new Color(0.0f, 1.0f, 1.0f);
+            building1.DrawShape = Actor.ActorDrawShape.Square;
+            World.Instance.Add(building1);
+
+            // building 2
+            Actor building2 = new Actor();
+            building2.Size = new Vector2(100.0f, 100.0f);
+            building2.Position = new Vector2(-256.0f, 192.0f);
+            building2.Color = new Color(1.0f, 1.0f, 0.0f);
+            building2.DrawShape = Actor.ActorDrawShape.Square;
+            World.Instance.Add(building2);
+
+            // Player 1
+            Actor player1 = new Actor();
+            player1.Size = new Vector2(30.0f, 30.0f);
+            player1.Position = new Vector2(-256.0f, 0.0f);
+            player1.Color = new Color(0.0f, 0.0f, 0.0f);
+            player1.DrawShape = Actor.ActorDrawShape.Circle;
+            World.Instance.Add(player1);
+            player1.Name = "Player 1";
+
+            // player 1 input
+            DeveloperConsole.Instance.ItemManager.AddCommand("UpPressed", new ConsoleCommandHandler(MoveUp));
+            DeveloperConsole.Instance.ItemManager.AddCommand("DownPressed", new ConsoleCommandHandler(MoveDown));
+            DeveloperConsole.Instance.ItemManager.AddCommand("LeftPressed", new ConsoleCommandHandler(MoveLeft));
+            DeveloperConsole.Instance.ItemManager.AddCommand("RightPressed", new ConsoleCommandHandler(MoveRight));
+
+            Switchboard.Instance["UpPressed"] += new MessageHandler(x => MoveUp(null));
+            Switchboard.Instance["DownPressed"] += new MessageHandler(x => MoveDown(null));
+            Switchboard.Instance["LeftPressed"] += new MessageHandler(x => MoveLeft(null));
+            Switchboard.Instance["RightPressed"] += new MessageHandler(x => MoveRight(null));
+
+            // Player 2
+
+        }
+
+        public object MoveUp(object[] aParams)
+        {
+            Actor p1 = Actor.GetNamed("Player 1");
+            if (p1.Position.Y < 380.0f && p1.Position.Y >= -380.0f)
+                p1.MoveTo(new Vector2(p1.Position.X, p1.Position.Y + 5.0f), 0.0f, false);
+            
+            return null;
+        }
+
+        public object MoveDown(object[] aParams)
+        {
+            Actor p1 = Actor.GetNamed("Player 1");
+            if (p1.Position.Y <= 380.0f && p1.Position.Y > -380.0f)
+                p1.MoveTo(new Vector2(p1.Position.X, p1.Position.Y - 5.0f), 0.0f, false);
+
+            return null;
+        }
+
+        public object MoveLeft(object[] aParams)
+        {
+            Actor p1 = Actor.GetNamed("Player 1");
+            if (p1.Position.X < -10.0f && p1.Position.X >= -510.0f)
+                p1.MoveTo(new Vector2(p1.Position.X - 5.0f, p1.Position.Y), 0.0f, false);
+
+            return null;
+        }
+
+        public object MoveRight(object[] aParams)
+        {
+            Actor p1 = Actor.GetNamed("Player 1");
+            if (p1.Position.X < -20.0f && p1.Position.X >= -512.0f)
+                p1.MoveTo(new Vector2(p1.Position.X + 5.0f, p1.Position.Y), 0.0f, false);
+
+            return null;
         }
 
         /// <summary>

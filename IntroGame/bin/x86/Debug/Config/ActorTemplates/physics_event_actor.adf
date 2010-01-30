@@ -1,8 +1,0 @@
-﻿;Initialize it as PhysicsEventActor
-ActorFactory.InitializeActor(PhysicsEventActor.Create())
-
-Color = Color(1.0, 0.0, 1.0, 1.0)
-Size = Vector2(3, 3)
-Restitution = 0.95
-;Here's the collision response that plays sound. Pretty straightforward, eh? 
-RegisterCollisionResponse("ground", PlaySoundCollisionResponse.Create("Sounds\sprong", 1.0))

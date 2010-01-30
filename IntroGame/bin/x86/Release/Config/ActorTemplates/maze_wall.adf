@@ -1,6 +1,0 @@
-﻿ActorFactory.InitializeActor(PhysicsActor.Create())
-
-Color = Color(0.5, 0.5, 0.8, 1.0)
-Size = Vector2(3, 3)
-Density = 0
-Tag("maze_wall")
