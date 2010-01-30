@@ -31,6 +31,7 @@ namespace DefineYourself
         SpriteBatch spriteBatch;
         SkillWeb skillWeb;
         List<Actor> buildingList;
+        TextActor text;
 
         public ClientGame()
         {
@@ -45,6 +46,7 @@ namespace DefineYourself
             // Set the mouse cursor to be visible
             IsMouseVisible = true;
 
+            // TV: initialize a list of Actors representing the buildings the player can interact with
             buildingList = new List<Actor>();
         }
 
@@ -88,7 +90,7 @@ namespace DefineYourself
         {
             // Tim, this is for you! (plz delete this line)
 
-            // campus map
+            // campus map panel
             Actor campus = new Actor();
             campus.Size = new Vector2(512.0f, 768.0f);
             campus.Position = new Vector2(-256.0f, 0.0f);
@@ -97,7 +99,7 @@ namespace DefineYourself
             World.Instance.Add(campus);
 
 
-            // tech web/tree
+            // tech web/tree panel
             Actor tech = new Actor();
             tech.Size = new Vector2(512.0f, 768.0f);
             tech.Position = new Vector2(256.0f, 0.0f);
@@ -111,7 +113,7 @@ namespace DefineYourself
             building1.Position = new Vector2(-256.0f, -192.0f);
             building1.Color = new Color(0.0f, 1.0f, 1.0f);
             building1.DrawShape = Actor.ActorDrawShape.Square;
-            building1.Name = "Building 1";
+            building1.Name = "Library";
             buildingList.Add(building1);
             World.Instance.Add(building1);
 
@@ -121,7 +123,7 @@ namespace DefineYourself
             building2.Position = new Vector2(-256.0f, 192.0f);
             building2.Color = new Color(1.0f, 1.0f, 0.0f);
             building2.DrawShape = Actor.ActorDrawShape.Square;
-            building2.Name = "Building 2";
+            building2.Name = "Stadium";
             buildingList.Add(building2);
             World.Instance.Add(building2);
 
@@ -145,10 +147,18 @@ namespace DefineYourself
             Switchboard.Instance["LeftPressed"] += new MessageHandler(x => MoveLeft(null));
             Switchboard.Instance["RightPressed"] += new MessageHandler(x => MoveRight(null));
 
-            // Player 2
+            // TODO: set up Player 2 keyboard input message listeners
 
+            // tech listener
+            text = new TextActor();
+            text.Position = new Vector2(256.0f, 0.0f);
+            text.Name = "Tree";
+            World.Instance.Add(text);
+            Switchboard.Instance["Collision"] += new MessageHandler(x => TreeListener(x.Sender));
+            
         }
 
+        // Handles the Up arrow - Player one moves up
         public object MoveUp(object[] aParams)
         {
             Actor p1 = Actor.GetNamed("Player 1");
@@ -158,6 +168,7 @@ namespace DefineYourself
             return null;
         }
 
+        // Handles the Down arrow - Player one moves down
         public object MoveDown(object[] aParams)
         {
             Actor p1 = Actor.GetNamed("Player 1");
@@ -167,6 +178,7 @@ namespace DefineYourself
             return null;
         }
 
+        // Handles the Left arrow - Player one moves left
         public object MoveLeft(object[] aParams)
         {
             Actor p1 = Actor.GetNamed("Player 1");
@@ -176,6 +188,7 @@ namespace DefineYourself
             return null;
         }
 
+        // Handles the Right arrow - Player one moves right
         public object MoveRight(object[] aParams)
         {
             Actor p1 = Actor.GetNamed("Player 1");
@@ -185,6 +198,16 @@ namespace DefineYourself
             return null;
         }
 
+        // TODO: add functions for Player 2 key input
+
+        // When a Collision message is broadcast, this updates the Tree TextActor with the name of the building that was collided with
+        public object TreeListener(object aParams)
+        {
+            text.DisplayString = ((Actor)aParams).Name;
+            return null;
+        }
+
+        // Checks every tick whether Player 1 intersects a building
         protected void PlayerAtBuilding()
         {
             Actor p1 = Actor.GetNamed("Player 1");
@@ -196,7 +219,14 @@ namespace DefineYourself
                     ((p1.Position.Y > b1.Bounds.Min.Y && p1.Position.Y < b1.Bounds.Max.Y)))
                 {
                     Log.Instance.Log("Collision with " + b1.Name);
-                }          
+                    //text.DisplayString = b1.Name;
+                    Switchboard.Instance.Broadcast(new Message("Collision", b1));
+                    break;
+                }
+                else
+                {
+                    text.DisplayString = "Tree";
+                }
             }
 
 
@@ -234,7 +264,7 @@ namespace DefineYourself
 
             // TODO: Add your update logic here
 
-            // Checking each tick for the player to be colliding with a building
+            // TV: Checking each tick for the player to be colliding with a building
             PlayerAtBuilding();
 
             base.Update(gameTime);
