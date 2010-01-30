@@ -14,3 +14,5 @@ TestResults.xml
 syntax: regexp
 /bin/
 /obj/
+ClientGame/bin/
+ClientGame/obj/

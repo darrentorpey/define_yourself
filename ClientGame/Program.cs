@@ -1,6 +1,6 @@
 using System;
 
-namespace ClientGame
+namespace DefineYourself
 {
     static class Program
     {

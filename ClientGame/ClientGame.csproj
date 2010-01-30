@@ -6,7 +6,7 @@
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ClientGame</RootNamespace>
+    <RootNamespace>DefineYourself</RootNamespace>
     <AssemblyName>ClientGame</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <XnaFrameworkVersion>v3.0</XnaFrameworkVersion>
@@ -70,6 +70,7 @@
     <Reference Include="System">
       <Private>False</Private>
     </Reference>
+    <Reference Include="System.Data" />
     <Reference Include="System.Xml">
       <Private>False</Private>
     </Reference>
@@ -86,6 +87,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="ClientGame.cs" />
+    <Compile Include="Skills\SkillWeb.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Game.ico" />

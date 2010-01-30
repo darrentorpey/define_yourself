@@ -15,7 +15,9 @@ using AngelXNA;
 using AngelXNA.Actors;
 using AngelXNA.Infrastructure;
 
-namespace ClientGame
+using DefineYourself.Skills;
+
+namespace DefineYourself
 {
     /// <summary>
     /// This is the main type for your game
@@ -24,11 +26,13 @@ namespace ClientGame
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+        SkillWeb skillWeb;
 
         public ClientGame()
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
+
 
             // Set the window size, as desired
             graphics.PreferredBackBufferWidth = 1024;
@@ -51,6 +55,11 @@ namespace ClientGame
             // Add the default grid so we can see where our Actors are in the world
             World.Instance.Add(new GridActor());
 
+            InitializeMap();
+
+            InitializeSkillWeb();
+            skillWeb = new SkillWeb();
+
             // Set the camera up somewhere "above" the grid
             World.Instance.Camera.Position = new Vector3(0.0f, 0.0f, 50.0f);
 
@@ -61,6 +70,18 @@ namespace ClientGame
             // TODO: Add your initialization logic here
 
             base.Initialize();
+        }
+
+        protected void InitializeSkillWeb()
+        {
+            // This is Darren's turf, to start
+
+        }
+
+        protected void InitializeMap()
+        {
+            // Tim, this is for you! (plz delete this line)
+
         }
 
         /// <summary>
