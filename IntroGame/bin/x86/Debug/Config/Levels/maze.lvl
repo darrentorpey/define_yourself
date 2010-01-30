@@ -1,0 +1,101 @@
+﻿BeginActor("maze_wall")
+	Position = Vector2(-13, 0)
+	Size = Vector2(1, 20)
+	Name = "LeftWall"
+EndActor()
+
+BeginActor("maze_wall")
+	Position = Vector2(13, 0)
+	Size = Vector2(1, 20)
+	Name = "RightWall"
+EndActor()
+
+BeginActor("maze_wall")
+	Position = Vector2(0, -9.6)
+	Size = Vector2(26, 1)
+	Name = "BottomWall"
+EndActor()
+
+BeginActor("maze_wall")
+	Position = Vector2(0, 9.6)
+	Size = Vector2(26, 1)
+	Name = "TopWall"
+EndActor()
+
+BeginActor("maze_wall")
+	Position = Vector2(-10, 6)
+	Size = Vector2(1, 8)
+	Name = "Wall1"
+EndActor()
+
+BeginActor("maze_wall")
+	Position = Vector2(-10, -6)
+	Size = Vector2(1, 8)
+	Name = "Wall2"
+EndActor()
+
+BeginActor("maze_wall")
+	Position = Vector2(-2, -6)
+	Size = Vector2(1, 8)
+	Name = "Wall3"
+EndActor()
+
+BeginActor("maze_wall")
+	Position = Vector2(2, -6)
+	Size = Vector2(1, 8)
+	Name = "Wall4"
+EndActor()
+
+BeginActor("maze_wall")
+	Position = Vector2(6, -6)
+	Size = Vector2(1, 8)
+	Name = "Wall5"
+EndActor()
+
+BeginActor("maze_wall")
+	Position = Vector2(-6, -2)
+	Size = Vector2(9, 1)
+	Name = "Wall6"
+EndActor()
+
+BeginActor("maze_wall")
+	Position = Vector2(4, -2)
+	Size = Vector2(5, 1)
+	Name = "Wall7"
+EndActor()
+
+BeginActor("maze_wall")
+	Position = Vector2(-6, 2)
+	Size = Vector2(1, 9)
+	Name = "Wall8"
+EndActor()
+
+BeginActor("maze_wall")
+	Position = Vector2(-3, 7)
+	Size = Vector2(1, 10)
+	Name = "Wall9"
+EndActor()
+
+BeginActor("maze_wall") 
+	Position = Vector2(3, 4)
+	Size = Vector2(1, 4)
+	Name = "Wall10"
+EndActor()
+
+BeginActor("maze_wall")
+	Position = Vector2(6.5, 5)
+	Size = Vector2(1, 10)
+	Name = "Wall11"
+EndActor()
+
+BeginActor("maze_wall")
+	Position = Vector2(9.5, 2)
+	Size = Vector2(1, 16)
+	Name = "Wall12"
+EndActor()
+
+BeginActor("maze_wall")
+	Position = Vector2(0, 2)
+	Size = Vector2(7, 1)
+	Name = "Wall13"
+EndActor()

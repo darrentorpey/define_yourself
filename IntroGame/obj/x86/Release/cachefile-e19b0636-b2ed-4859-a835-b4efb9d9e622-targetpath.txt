@@ -1,0 +1,10 @@
+Content\Images\angel.xnb
+Content\Images\numbers\angel_01.xnb
+Content\Images\numbers\angel_02.xnb
+Content\Images\numbers\angel_03.xnb
+Content\Images\numbers\angel_04.xnb
+Content\Images\numbers\angel_05.xnb
+Content\Images\Test.xnb
+Content\Images\triangle.xnb
+Content\Sounds\sprong.xnb
+Content\Sounds\click.xnb

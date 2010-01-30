@@ -1,0 +1,37 @@
+﻿
+BeginActor("ground_actor")
+	Position = Vector2(0, -11)
+	Tag("spawned")
+	SetLayerName("foreground")
+	Name = "Ground"
+EndActor()
+
+; This actor is an PhysicsEventActor that's set up to
+;  respond to sound. Check physics_event_actor.adf. 
+BeginActor("physics_event_actor")
+	Position = Vector2(0, 8)
+	SetLayerName("foreground")
+	Tag("spawned")
+	Name = "Bouncy"
+EndActor()
+
+
+; This actor is a non-colliding actor that is set to
+;  layer in front of the of the falling actor
+BeginActor("simple_actor")
+	Color = Color(0.0, 0.0, 1.0, 1.0)
+	Size = Vector2(3, 3)
+	Position = Vector2(0, 1)
+	SetLayerName("hud")
+	Tag("spawned")
+EndActor()
+
+; This actor is a non-colliding actor that is set to
+;  layer behind of the of the falling actor
+BeginActor("simple_actor")
+	Color = Color(1.0, 1.0, 0.0, 1.0)
+	Size = Vector2(3, 3)
+	Position = Vector2(0, -3)
+	SetLayerName("background")
+	Tag("spawned")
+EndActor()

@@ -1,0 +1,16 @@
+# Start with glob syntax
+syntax: glob
+
+*.bak
+*.ncb
+*.suo
+*.user
+*.cache
+*.cachefile
+*.orig
+*.csproj~
+TestResults.xml
+
+syntax: regexp
+/bin/
+/obj/

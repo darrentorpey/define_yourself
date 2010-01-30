@@ -1,0 +1,17 @@
+﻿
+BeginActor("simple_actor")
+	Size = Vector2(3, 3)
+	Position = Vector2(-5, 0)
+	Tag("spawned")
+	Tag("left-tilted")
+	Name = "LeftActor"
+EndActor()
+
+BeginActor("simple_actor")
+	Size = Vector2(5, 5)
+	Position = Vector2(5, 0)
+	Color = Color(1, 0, 0, 0.8)
+	Tag("spawned")
+	Tag("right-tilted")
+	Name = "RightActor"
+EndActor()
