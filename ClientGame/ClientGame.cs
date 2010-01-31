@@ -22,6 +22,35 @@ using DefineYourself.Skills;
 
 namespace DefineYourself
 {
+    public class MessageObject
+    {
+        public Actor building;
+        public Actor player;
+
+        public Actor getBuilding()
+        {
+            return building;
+        }
+
+        protected void setBuilding(object b)
+        {
+            building = (Actor)b;
+            return;
+        }
+
+        public Actor getPlayer()
+        {
+            return player;
+        }
+
+        protected void setPlayer(object p)
+        {
+            player = (Actor)p;
+            return;
+        }
+    
+    };
+
     /// <summary>
     /// This is the main type for your game
     /// </summary>
@@ -37,6 +66,7 @@ namespace DefineYourself
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
+            
 
 
             // Set the window size, as desired
@@ -48,6 +78,9 @@ namespace DefineYourself
 
             // TV: initialize a list of Actors representing the buildings the player can interact with
             buildingList = new List<Actor>();
+
+            SoundState.LoadContent(Content);
+            MusicState.LoadContent(Content);
         }
 
         /// <summary>
@@ -76,6 +109,8 @@ namespace DefineYourself
             Components.Add(new AngelComponent(this));
 
             // TODO: Add your initialization logic here
+
+            MusicState.Instance.Play();
 
             base.Initialize();
         }
@@ -111,15 +146,17 @@ namespace DefineYourself
             Actor building1 = new Actor();
             building1.Size = new Vector2(100.0f, 100.0f);
             building1.Position = new Vector2(-256.0f, -192.0f);
-            building1.Color = new Color(0.0f, 1.0f, 1.0f);
+            //building1.Color = new Color(0.0f, 1.0f, 1.0f);
+            //building1.Color = new Color(0.0f, 1.0f, 1.0f, 0.0f);
             building1.DrawShape = Actor.ActorDrawShape.Square;
+            building1.SetSprite("Art/lib_bldg");
             building1.Name = "Library";
             buildingList.Add(building1);
             World.Instance.Add(building1);
 
             // building 2
             Actor building2 = new Actor();
-            building2.Size = new Vector2(100.0f, 100.0f);
+            building2.Size = new Vector2(100.0f, 150.0f);
             building2.Position = new Vector2(-256.0f, 192.0f);
             building2.Color = new Color(1.0f, 1.0f, 0.0f);
             building2.DrawShape = Actor.ActorDrawShape.Square;
@@ -132,7 +169,7 @@ namespace DefineYourself
             player1.Size = new Vector2(30.0f, 30.0f);
             player1.Position = new Vector2(-256.0f, 0.0f);
             player1.Color = new Color(0.0f, 0.0f, 0.0f);
-            player1.DrawShape = Actor.ActorDrawShape.Circle;
+            player1.DrawShape = Actor.ActorDrawShape.Square;
             World.Instance.Add(player1);
             player1.Name = "Player 1";
 
@@ -147,7 +184,25 @@ namespace DefineYourself
             Switchboard.Instance["LeftPressed"] += new MessageHandler(x => MoveLeft(null));
             Switchboard.Instance["RightPressed"] += new MessageHandler(x => MoveRight(null));
 
-            // TODO: set up Player 2 keyboard input message listeners
+            // Player 2
+            Actor player2 = new Actor();
+            player2.Size = new Vector2(30.0f, 30.0f);
+            player2.Position = new Vector2(-256.0f, -50.0f);
+            player2.Color = new Color(1.0f, 1.0f, 1.0f);
+            player2.DrawShape = Actor.ActorDrawShape.Square;
+            World.Instance.Add(player2);
+            player2.Name = "Player 2";
+
+            // Player 2 input
+            DeveloperConsole.Instance.ItemManager.AddCommand("WPressed", new ConsoleCommandHandler(MoveUp2));
+            DeveloperConsole.Instance.ItemManager.AddCommand("SPressed", new ConsoleCommandHandler(MoveDown2));
+            DeveloperConsole.Instance.ItemManager.AddCommand("APressed", new ConsoleCommandHandler(MoveLeft2));
+            DeveloperConsole.Instance.ItemManager.AddCommand("DPressed", new ConsoleCommandHandler(MoveRight2));
+
+            Switchboard.Instance["WPressed"] += new MessageHandler(x => MoveUp2(null));
+            Switchboard.Instance["SPressed"] += new MessageHandler(x => MoveDown2(null));
+            Switchboard.Instance["APressed"] += new MessageHandler(x => MoveLeft2(null));
+            Switchboard.Instance["DPressed"] += new MessageHandler(x => MoveRight2(null));
 
             // tech listener
             text = new TextActor();
@@ -155,6 +210,8 @@ namespace DefineYourself
             text.Name = "Tree";
             World.Instance.Add(text);
             Switchboard.Instance["Collision"] += new MessageHandler(x => TreeListener(x.Sender));
+
+            SoundState.Instance.SoundOff();
             
         }
 
@@ -198,7 +255,46 @@ namespace DefineYourself
             return null;
         }
 
-        // TODO: add functions for Player 2 key input
+        // *******************************************************************************************************************
+        // Handles the Up arrow - Player 2 moves up
+        public object MoveUp2(object[] aParams)
+        {
+            Actor p2 = Actor.GetNamed("Player 2");
+            if (p2.Position.Y < 380.0f && p2.Position.Y >= -380.0f)
+                p2.MoveTo(new Vector2(p2.Position.X, p2.Position.Y + 5.0f), 0.0f, false);
+
+            return null;
+        }
+
+        // Handles the Down arrow - Player 2 moves down
+        public object MoveDown2(object[] aParams)
+        {
+            Actor p2 = Actor.GetNamed("Player 2");
+            if (p2.Position.Y <= 380.0f && p2.Position.Y > -380.0f)
+                p2.MoveTo(new Vector2(p2.Position.X, p2.Position.Y - 5.0f), 0.0f, false);
+
+            return null;
+        }
+
+        // Handles the Left arrow - Player 2 moves left
+        public object MoveLeft2(object[] aParams)
+        {
+            Actor p2 = Actor.GetNamed("Player 2");
+            if (p2.Position.X < -10.0f && p2.Position.X >= -510.0f)
+                p2.MoveTo(new Vector2(p2.Position.X - 5.0f, p2.Position.Y), 0.0f, false);
+
+            return null;
+        }
+
+        // Handles the Right arrow - Player 2 moves right
+        public object MoveRight2(object[] aParams)
+        {
+            Actor p2 = Actor.GetNamed("Player 2");
+            if (p2.Position.X < -20.0f && p2.Position.X >= -512.0f)
+                p2.MoveTo(new Vector2(p2.Position.X + 5.0f, p2.Position.Y), 0.0f, false);
+
+            return null;
+        }
 
         // When a Collision message is broadcast, this updates the Tree TextActor with the name of the building that was collided with
         public object TreeListener(object aParams)
@@ -215,17 +311,22 @@ namespace DefineYourself
             //Actor b1 = Actor.GetNamed("Building 1");
             foreach (Actor b1 in buildingList) {
                 // if the player is completely within the boundary of the building, it broadcasts a message
-                if  ((p1.Position.X > b1.Bounds.Min.X && p1.Position.X < b1.Bounds.Max.X) &&
-                    ((p1.Position.Y > b1.Bounds.Min.Y && p1.Position.Y < b1.Bounds.Max.Y)))
+                if  ((p1.Bounds.Min.X > b1.Bounds.Min.X && p1.Bounds.Max.X < b1.Bounds.Max.X) &&
+                    ((p1.Bounds.Min.Y > b1.Bounds.Min.Y && p1.Bounds.Max.Y < b1.Bounds.Max.Y)))
                 {
-                    Log.Instance.Log("Collision with " + b1.Name);
+                   // Log.Instance.Log("Collision with " + b1.Name);
                     //text.DisplayString = b1.Name;
                     Switchboard.Instance.Broadcast(new Message("Collision", b1));
+                    //SoundState.Instance.SoundResume();
+                    //SoundState.Instance.PlayPickupSound(new GameTime());
+                    MusicState.Instance.ActiveSong = 1;
                     break;
                 }
                 else
                 {
                     text.DisplayString = "Tree";
+                   // SoundState.Instance.SoundOff();
+                    MusicState.Instance.ActiveSong = 0;
                 }
             }
 
@@ -267,6 +368,7 @@ namespace DefineYourself
             // TV: Checking each tick for the player to be colliding with a building
             PlayerAtBuilding();
 
+            MusicState.Instance.Update(gameTime);
             base.Update(gameTime);
         }
 
