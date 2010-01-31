@@ -63,7 +63,7 @@ namespace AngelXNA
             KeyboardState currentKeyboardState = Keyboard.GetState();
             foreach (Keys key in currentKeyboardState.GetPressedKeys())
             {
-               if (!_previousKeyboardState.IsKeyDown(key))
+               // if (!_previousKeyboardState.IsKeyDown(key))
                     KeyDown(key);
             }
 
