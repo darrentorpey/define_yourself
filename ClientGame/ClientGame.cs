@@ -26,7 +26,8 @@ namespace DefineYourself
     public class MessageObject
     {
         public Actor bldg { get; set; }
-        public Actor play { get; set; }    
+        public Actor play { get; set; }
+        public bool boolie { get; set; }
     };
 
     /// <summary>
@@ -185,6 +186,8 @@ namespace DefineYourself
                 nameText.Position = new Vector2(_node.Actor.Position.X - 20, _node.Actor.Position.Y - 30);
                 World.Instance.Add(nameText);
             }
+
+            Switchboard.Instance["Collision"] += new MessageHandler(x => UpdateSkillProgress(x.Sender));
         }
 
         [ConsoleMethod]
@@ -417,6 +420,14 @@ namespace DefineYourself
             return null;
         }
 
+
+        // When a Collision message is broadcast, this updates the Tree TextActor with the name of the building that was collided with
+        public object UpdateSkillProgress(object aParams)
+        {
+            SkillWeb.Instance.UpdateSkillProgress((MessageObject)aParams);
+            return null;
+        }
+
         // Checks every tick whether Player 1 intersects a building
         protected void PlayerAtBuilding()
         {
@@ -525,6 +536,7 @@ namespace DefineYourself
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
+            SkillWeb.Instance.Report();
 
             SkillWeb.Instance.Nodes.ForEach(skillNode => { skillNode.Draw(); });
             // TODO: Add your drawing code here

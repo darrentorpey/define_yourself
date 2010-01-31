@@ -8,6 +8,7 @@ using Microsoft.Xna.Framework;
 
 using AngelXNA.Actors;
 using AngelXNA.Infrastructure.Console;
+using AngelXNA.Infrastructure.Logging;
 
 namespace DefineYourself.Skills
 {
@@ -100,20 +101,29 @@ namespace DefineYourself.Skills
             SkillPointsModifier = new SkillPointsModifier();
         }
 
+        public bool ActiveForPlayer(string playerName)
+        {
+            return true;
+        }
+
         [ConsoleMethod]
         public void Prereq(string name)
         {
-            SkillNode skillNode = SkillWeb.Instance.Nodes.Find(x => { return x.Name == name; });
+            SkillNode skillNode = SkillWeb.Instance.FindNodeByName(name);
             prereqs.Add(skillNode);
         }
 
         public void Report()
         {
-            Console.WriteLine("Parents:");
-            foreach (SkillNode prereq in prereqs)
-            {
-                Console.WriteLine(prereq.ToString());
-            }
+            //Console.WriteLine("Parents:");
+            //foreach (SkillNode prereq in prereqs)
+            //{
+            //    Console.WriteLine(prereq.ToString());
+            //}
+
+            Log.Instance.Log("P1: " + P1_Points);
+            Log.Instance.Log("----");
+            Log.Instance.Log("P2: " + P2_Points);
         }
 
         public override String ToString()
