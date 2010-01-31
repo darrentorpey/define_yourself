@@ -28,6 +28,7 @@ namespace DefineYourself
         public Actor bldg { get; set; }
         public Actor play { get; set; }
         public bool boolie { get; set; }
+        public bool justFinished { get; set; }
     };
 
     /// <summary>
@@ -283,7 +284,7 @@ namespace DefineYourself
             Actor player1 = new Actor();
             player1.Size = new Vector2(30.0f, 30.0f);
             player1.Position = new Vector2(-256.0f, 0.0f);
-            player1.Color = new Color(0.0f, 0.0f, 0.0f);
+            player1.Color = new Color(1.0f, 1.0f, 1.0f);
             player1.DrawShape = Actor.ActorDrawShape.Square;
             World.Instance.Add(player1);
             player1.Name = "Player 1";
@@ -303,7 +304,7 @@ namespace DefineYourself
             Actor player2 = new Actor();
             player2.Size = new Vector2(30.0f, 30.0f);
             player2.Position = new Vector2(-256.0f, -50.0f);
-            player2.Color = new Color(1.0f, 1.0f, 1.0f);
+            player2.Color = new Color(0.0f, 0.0f, 0.0f);
             player2.DrawShape = Actor.ActorDrawShape.Square;
             World.Instance.Add(player2);
             player2.Name = "Player 2";

@@ -59,13 +59,25 @@ namespace DefineYourself.Skills
         private bool updatePlayerSkillProgress(Actor player, string skillName)
         {
             bool updated = false;
+            bool justFinished = false;
             if (player.Name == "Player 1")
             {
                 SkillNode node = FindActiveNodeByNameAndPlayer(skillName, player.Name);
                 if (node != null)
                 {
-                    node.P1_Points += 1;
-                    updated = true;
+                    if (node.Completed(player.Name))
+                    {
+                        updated = false;
+                    }
+                    else
+                    {
+                        node.P1_Points += 1;
+                        if (node.Completed(player.Name))
+                        {
+                            justFinished = true;
+                        }
+                        updated = true;
+                    }
                 }
             }
             else if (player.Name == "Player 2")
@@ -73,13 +85,25 @@ namespace DefineYourself.Skills
                 SkillNode node = FindActiveNodeByNameAndPlayer(skillName, player.Name);
                 if (node != null)
                 {
-                    node.P2_Points += 1;
-                    updated = true;
+                    if (node.Completed(player.Name))
+                    {
+                        updated = false;
+                    }
+                    else
+                    {
+                        node.P2_Points += 1;
+                        if (node.Completed(player.Name))
+                        {
+                            justFinished = true;
+                        }
+                        updated = true;
+                    }
                 }
             }
             MessageObject messageObject = new MessageObject();
             messageObject.play = player;
             messageObject.boolie = updated;
+            messageObject.justFinished = justFinished;
 
             Switchboard.Instance.Broadcast(new Message("SkillUpdate", messageObject));
             return updated;
