@@ -1,22 +1,149 @@
-﻿Using(SkillNode.Create())
-	Location = Vector2(200, 200)
-	Name = "Mechanical Engineering"
-	IconName = "eng_icon"
-	PointsNeeded = 45
+﻿                                                                     
+                                                                     
+                                                                     
+                                             
+Using(SkillNode.Create())
+       Name = "Psychology"
+       IconName = "soc_icon"
+       PointsNeeded = 10
+       Location = Vector2(56, 41)
 EndScope()
 
 Using(SkillNode.Create())
-	Name = "Library"
-	IconName = "lib_icon"
-	Location = Vector2(56, 41)
-	PointsNeeded = 20
+       Name = "Political Science"
+       IconName = "soc_icon"
+       PointsNeeded = 10
+       Location = Vector2(53, 573)
 EndScope()
 
 Using(SkillNode.Create())
-	Location = Vector2(200, 100)
-	Name = "Stadium"
-	IconName = "sci_icon"
-	Prereq("English")
-	Prereq("Cafe")
-	PointsNeeded = 60
+       Name = "Fundraising"
+       IconName = "soc_icon"
+       PointsNeeded = 10
+       Location = Vector2(223, 573)
+EndScope()
+
+Using(SkillNode.Create())
+       Name = "Hypnosis"
+       IconName = "soc_icon"
+       PointsNeeded = 10
+       Location = Vector2(223, 41)
+       Prereq("Psychology")
+EndScope()
+
+Using(SkillNode.Create())
+       Name = "Campaign Management"
+       IconName = "soc_icon"
+       PointsNeeded = 10
+       Location = Vector2(384, 540)
+       Prereq("Political Science")
+       Prereq("Fundraising")
+EndScope()
+
+Using(SkillNode.Create())
+       Name = "Mass Hypnosis Machine"
+       IconName = "soc_icon"
+       PointsNeeded = 10
+       Location = Vector2(377, 156)
+       Prereq("Hypnosis")
+       Prereq("Computer Science")
+       Prereq("Mechanical Engineering")
+EndScope()
+
+Using(SkillNode.Create())
+       Name = "Metallurgy"
+       IconName = "eng_icon"
+       PointsNeeded = 10
+       Location = Vector2(56, 394)
+EndScope()
+
+Using(SkillNode.Create())
+       Name = "Legos"
+       IconName = "eng_icon"
+       PointsNeeded = 10
+       Location = Vector2(221, 126)
+EndScope()
+
+Using(SkillNode.Create())
+       Name = "Mechanical Engineering"
+       IconName = "eng_icon"
+       PointsNeeded = 10
+       Location = Vector2(220, 323)
+       Prereq("Physics")
+       Prereq("Metallurgy")
+EndScope()
+
+Using(SkillNode.Create())
+       Name = "Robotics"
+       IconName = "eng_icon"
+       PointsNeeded = 10
+       Location = Vector2(380, 418)
+       Prereq("Mechanical Engineering")
+       Prereq("Computer Science")
+EndScope()
+
+Using(SkillNode.Create())
+       Name = "Plasma Generation"
+       IconName = "eng_icon"
+       PointsNeeded = 10
+       Location = Vector2(380, 48)
+       Prereq("Mechanical Engineering")
+       Prereq("Chemistry")
+EndScope()
+
+Using(SkillNode.Create())
+       Name = "Nano-construction"
+       IconName = "eng_icon"
+       PointsNeeded = 10
+       Location = Vector2(380, 304)
+       Prereq("Robotics")
+       Prereq("Chemistry")
+       Prereq("Fundraising")
+       Prereq("Biology")
+       Prereq("Political Science")
+EndScope()
+
+Using(SkillNode.Create())
+       Name = "Biology"
+       IconName = "sci_icon"
+       PointsNeeded = 10
+       Location = Vector2(56, 124)
+EndScope()
+
+Using(SkillNode.Create())
+       Name = "Chemistry"
+       IconName = "sci_icon"
+       PointsNeeded = 10
+       Location = Vector2(56, 213)
+EndScope()
+
+Using(SkillNode.Create())
+       Name = "Physics"
+       IconName = "sci_icon"
+       PointsNeeded = 10
+       Location = Vector2(56, 302)
+EndScope()
+
+Using(SkillNode.Create())
+       Name = "Microsoft Word"
+       IconName = "sci_icon"
+       PointsNeeded = 10
+       Location = Vector2(56, 483)
+EndScope()
+
+Using(SkillNode.Create())
+       Name = "Medicine"
+       IconName = "sci_icon"
+       PointsNeeded = 10
+       Location = Vector2(221, 214)
+       Prereq("Biology")
+       Prereq("Chemistry")
+EndScope()
+
+Using(SkillNode.Create())
+       Name = "Computer Science"
+       IconName = "sci_icon"
+       PointsNeeded = 10
+       Location = Vector2(225, 446)
+       Prereq("Microsoft Word")
 EndScope()

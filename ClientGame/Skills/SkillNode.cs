@@ -12,7 +12,7 @@ using AngelXNA.Infrastructure.Logging;
 
 namespace DefineYourself.Skills
 {
-    class SkillNode
+    public class SkillNode
     {        
         [ConsoleProperty]
         public string Name { get; set; }

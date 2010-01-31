@@ -59,6 +59,7 @@ namespace DefineYourself
 
             // TV: initialize a list of Actors representing the buildings the player can interact with
             buildingList = new List<Actor>();
+            MapSpot.BuildingList = buildingList;
 
             SoundState.LoadContent(Content);
             MusicState.LoadContent(Content);
@@ -166,7 +167,7 @@ namespace DefineYourself
                 p1_bar.DrawShape = Actor.ActorDrawShape.Square;
                 World.Instance.Add(p1_bar);
                 _node.P1_ProgBar = p1_bar;
-                _node.P1_Points = 40;
+                _node.P1_Points = 20;
 
                 Actor p2_bar = new Actor();
                 p2_bar.Position = new Vector2(_node.Actor.Position.X + 30, _node.Actor.Position.Y);
@@ -175,7 +176,7 @@ namespace DefineYourself
                 p2_bar.DrawShape = Actor.ActorDrawShape.Square;
                 World.Instance.Add(p2_bar);
                 _node.P2_ProgBar = p2_bar;
-                _node.P2_Points = 20;
+                _node.P2_Points = 10;
 
                 SpriteFont helveticaTiny;
                 SpriteFont helveticaSmall;
@@ -247,27 +248,35 @@ namespace DefineYourself
             tech.DrawShape = Actor.ActorDrawShape.Square;
             World.Instance.Add(tech);
 
-            // building 1
+            // Biology
             Actor building1 = new Actor();
             building1.Size = new Vector2(100.0f, 100.0f);
             building1.Position = new Vector2(-256.0f, -192.0f);
-            //building1.Color = new Color(0.0f, 1.0f, 1.0f);
-            //building1.Color = new Color(0.0f, 1.0f, 1.0f, 0.0f);
             building1.DrawShape = Actor.ActorDrawShape.Square;
             building1.SetSprite("Art/lib_bldg");
-            building1.Name = "Library";
+            building1.Name = "Biology";
             buildingList.Add(building1);
             World.Instance.Add(building1);
 
-            // building 2
+            // Chemistry
             Actor building2 = new Actor();
             building2.Size = new Vector2(100.0f, 150.0f);
             building2.Position = new Vector2(-256.0f, 192.0f);
             building2.Color = new Color(1.0f, 1.0f, 0.0f);
             building2.DrawShape = Actor.ActorDrawShape.Square;
-            building2.Name = "Stadium";
+            building2.Name = "Chemistry";
             buildingList.Add(building2);
             World.Instance.Add(building2);
+
+            // Medicine
+            Actor building3 = new Actor();
+            building3.Size = new Vector2(100.0f, 100.0f);
+            building3.Position = new Vector2(-256.0f, -192.0f);
+            building3.DrawShape = Actor.ActorDrawShape.Square;
+            building3.SetSprite("Art/lib_bldg");
+            building3.Name = "Biology";
+            buildingList.Add(building1);
+            World.Instance.Add(building1);
 
             // Player 1
             Actor player1 = new Actor();
@@ -325,7 +334,9 @@ namespace DefineYourself
             Switchboard.Instance["SkillUpdate"] += new MessageHandler(x => UpdateListener(x.Sender));
 
             SoundState.Instance.SoundOff();
-            
+   
+            // Add (invisible) map squares
+            ActorFactory.Instance.LoadLevel("map_spots");
         }
 
         // Handles the Up arrow - Player one moves up
@@ -436,7 +447,7 @@ namespace DefineYourself
         {
             if (((MessageObject)aParams).play.Name == "Player 1")
             {
-                if (((MessageObject)aParams).booly)
+                if (((MessageObject)aParams).boolie)
                 {
                     text.DisplayString = "P1 Updating!";
                     p1Earning = true;
@@ -449,7 +460,7 @@ namespace DefineYourself
             }
             else
             {
-                if (((MessageObject)aParams).booly)
+                if (((MessageObject)aParams).boolie)
                 {
                     text2.DisplayString = "P2 Updating!";
                     p2Earning = true;
@@ -571,7 +582,7 @@ namespace DefineYourself
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            SkillWeb.Instance.Report();
+            //SkillWeb.Instance.Report();
 
             SkillWeb.Instance.Nodes.ForEach(skillNode => { skillNode.Draw(); });
             // TODO: Add your drawing code here

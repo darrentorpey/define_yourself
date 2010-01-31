@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
+using AngelXNA;
 using AngelXNA.Actors;
 using AngelXNA.Infrastructure.Logging;
+using AngelXNA.Messaging;
 
 namespace DefineYourself.Skills
 {
@@ -56,17 +58,14 @@ namespace DefineYourself.Skills
 
         private bool updatePlayerSkillProgress(Actor player, string skillName)
         {
+            bool updated = false;
             if (player.Name == "Player 1")
             {
                 SkillNode node = FindActiveNodeByNameAndPlayer(skillName, player.Name);
                 if (node != null)
                 {
                     node.P1_Points += 1;
-                    return true;
-                }
-                else
-                {
-                    return false;
+                    updated = true;
                 }
             }
             else if (player.Name == "Player 2")
@@ -75,17 +74,15 @@ namespace DefineYourself.Skills
                 if (node != null)
                 {
                     node.P2_Points += 1;
-                    return true;
-                }
-                else
-                {
-                    return false;
+                    updated = true;
                 }
             }
-            else
-            {
-                return false;
-            }
+            MessageObject messageObject = new MessageObject();
+            messageObject.play = player;
+            messageObject.boolie = updated;
+
+            Switchboard.Instance.Broadcast(new Message("SkillUpdate", messageObject));
+            return updated;
         }
     }
 }

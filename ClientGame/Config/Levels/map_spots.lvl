@@ -1,0 +1,9 @@
+﻿ActorFactory.InitializeActor(MapSpot.Create())
+	Position = Vector2(-200, 200)
+	Name = "First Name"
+EndScope()
+
+ActorFactory.InitializeActor(MapSpot.Create())
+	Position = Vector2(-200, -200)
+	Name = "Second Name"
+EndScope()
