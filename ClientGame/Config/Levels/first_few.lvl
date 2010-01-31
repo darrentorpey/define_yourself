@@ -1,19 +1,22 @@
 ﻿Using(SkillNode.Create())
-	Location = Vector2(500, 200)
-	Name = "Cafe"
+	Location = Vector2(200, 200)
+	Name = "Mechanical Engineering"
 	IconName = "eng_icon"
+	PointsNeeded = 45
 EndScope()
 
 Using(SkillNode.Create())
 	Name = "English"
 	IconName = "lib_icon"
-	Location = Vector2(0, 40)
+	Location = Vector2(56, 41)
+	PointsNeeded = 20
 EndScope()
 
 Using(SkillNode.Create())
-	Location = Vector2(300, -100)
+	Location = Vector2(200, 100)
 	Name = "Physics"
 	IconName = "sci_icon"
 	Prereq("English")
 	Prereq("Cafe")
+	PointsNeeded = 60
 EndScope()
