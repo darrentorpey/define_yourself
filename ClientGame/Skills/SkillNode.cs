@@ -111,6 +111,7 @@ namespace DefineYourself.Skills
 
         public bool ActiveForPlayer(string playerName)
         {
+            prereqs.RemoveAll(x => { return x == null; });
             return prereqs.All(prereq => { return prereq.Completed(playerName); });
         }
 
