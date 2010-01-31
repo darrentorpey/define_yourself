@@ -63,6 +63,15 @@ namespace DefineYourself.Skills
             SkillWeb.Instance.AddNode(this);
         }
 
+        public bool Completed(string playerName)
+        {
+            if (playerName == "Player 1") {
+                return P1_Points >= PointsNeeded;
+            } else {
+                return P2_Points >= PointsNeeded;
+            }
+        }
+
         public void Draw()
         {
             int height;
@@ -90,7 +99,6 @@ namespace DefineYourself.Skills
 
         public SkillNode(string name)
         {
-
             Actor = new Actor();
             Name = name;
             Actor.Size = new Vector2(40, 40);
@@ -103,7 +111,7 @@ namespace DefineYourself.Skills
 
         public bool ActiveForPlayer(string playerName)
         {
-            return true;
+            return prereqs.All(prereq => { return prereq.Completed(playerName); });
         }
 
         [ConsoleMethod]

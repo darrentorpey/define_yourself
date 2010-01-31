@@ -262,7 +262,7 @@ namespace DefineYourself
             Actor building2 = new Actor();
             building2.Size = new Vector2(100.0f, 150.0f);
             building2.Position = new Vector2(-256.0f, 192.0f);
-            building2.Color = new Color(1.0f, 1.0f, 0.0f);
+            building2.Color = new Color(1.0f, 0.2f, 0.0f);
             building2.DrawShape = Actor.ActorDrawShape.Square;
             building2.Name = "Chemistry";
             buildingList.Add(building2);
@@ -271,12 +271,13 @@ namespace DefineYourself
             // Medicine
             Actor building3 = new Actor();
             building3.Size = new Vector2(100.0f, 100.0f);
-            building3.Position = new Vector2(-256.0f, -192.0f);
+            building3.Position = new Vector2(-256.0f, -92.0f);
+            building2.Color = new Color(0.2f, 0.2f, 0.0f);
             building3.DrawShape = Actor.ActorDrawShape.Square;
             building3.SetSprite("Art/lib_bldg");
-            building3.Name = "Biology";
-            buildingList.Add(building1);
-            World.Instance.Add(building1);
+            building3.Name = "Medicine";
+            buildingList.Add(building3);
+            World.Instance.Add(building3);
 
             // Player 1
             Actor player1 = new Actor();
