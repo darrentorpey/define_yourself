@@ -7,6 +7,12 @@ namespace DefineYourself.Skills
 {
     class SkillWeb
     {
+        private static SkillWeb s_Instance = new SkillWeb();
+        public static SkillWeb Instance
+        {
+            get { return s_Instance; }
+        }
+
         public List<SkillNode> Nodes { get; set; }// = new List<SkillNode>();
 
         public SkillWeb()

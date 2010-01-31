@@ -48,6 +48,12 @@ namespace AngelXNA.Actors
                 return EndActor(true);
             });
 
+            DeveloperConsole.Instance.ItemManager.AddCommand("EndScope", x =>
+            {
+                EndScope();
+                return null;
+            });
+
             DeveloperConsole.Instance.ItemManager.AddCommand("SaveLevel", x => {
                 DeveloperConsole.VerifyArgs(x, typeof(string));
                 WriteLevel((string)x[0]);
@@ -130,6 +136,11 @@ namespace AngelXNA.Actors
             // Set the actor's template deinition for seralization
             Actor theActor = (Actor)DeveloperConsole.Instance.CurrentScope;
             theActor.ActorDefinition = actorDefFile;
+        }
+
+        private void EndScope()
+        {
+            DeveloperConsole.Instance.EndUsing();
         }
 
         private Actor EndActor(bool addToWorld)

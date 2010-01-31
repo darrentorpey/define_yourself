@@ -5,7 +5,7 @@ using System.Text;
 
 namespace DefineYourself.Skills
 {
-    class SkillPointType
+    public class SkillPointType
     {
         public Types Type { get; set; }
         public int Value { get; set; }

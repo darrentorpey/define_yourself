@@ -16,6 +16,7 @@ using AngelXNA.Messaging;
 using AngelXNA;
 using AngelXNA.Actors;
 using AngelXNA.Infrastructure;
+using AngelXNA.Infrastructure.Logging;
 
 using DefineYourself.Skills;
 
@@ -59,7 +60,7 @@ namespace DefineYourself
             World.Instance.Add(new GridActor());
 
             InitializeMap();
-
+            
             InitializeSkillWeb();
 
             // Set the camera up somewhere "above" the grid
@@ -74,58 +75,101 @@ namespace DefineYourself
             base.Initialize();
         }
 
+        Texture2D iconTextureOne;
+
         protected void InitializeSkillWeb()
         {
-            // This is Darren's turf, to start
             skillWeb = new SkillWeb();
 
-            SkillNode node_first = new SkillNode("C");
-            SkillNode parent_one = new SkillNode("A");
-            SkillNode parent_two = new SkillNode("B");
-            node_first.AddParent(parent_one);
-            node_first.AddParent(parent_two);
-            node_first.Report();
-            skillWeb.AddNode(node_first);
-            skillWeb.AddNode(parent_one);
-            skillWeb.AddNode(parent_two);
+            //SkillNode node_first = new SkillNode("C");
+            //SkillNode parent_one = new SkillNode("A");
+            //SkillNode parent_two = new SkillNode("B");
+            //node_first.AddPrereq(parent_one);
+            //node_first.AddPrereq(parent_two);
+            //node_first.Report();
+            //skillWeb.AddNode(node_first);
+            //skillWeb.AddNode(parent_one);
+            //skillWeb.AddNode(parent_two);
 
             DeveloperConsole.Instance.ItemManager.AddCommand("TestUpdateSkills", new ConsoleCommandHandler(TestUpdateSkills));
-            DeveloperConsole.Instance.ItemManager.AddCommand("TestUpdateSkills2", new ConsoleCommandHandler(TestUpdateSkills2));
-            DeveloperConsole.Instance.ItemManager.AddCommand("TestUpdateSkills3", new ConsoleCommandHandler(TestUpdateSkills3));
+            DeveloperConsole.Instance.ItemManager.AddCommand("Quit", new ConsoleCommandHandler(QuitFromConsole));
+
+            Switchboard.Instance["Quit"] -= new MessageHandler(delegate(Message message) {
+                Quit();
+            });
+
+            iconTextureOne = Content.Load<Texture2D>("eng_icon");
+            iconTextureOne = Content.Load<Texture2D>("lib_icon");
+            iconTextureOne = Content.Load<Texture2D>("sci_icon");
+            iconTextureOne = Content.Load<Texture2D>("soc_icon");
+            iconTextureOne = Content.Load<Texture2D>("sports_icon");
+            iconTextureOne = Content.Load<Texture2D>("stu_icon");
+
+
+            //node_first.Location = new Vector2(10, 0);
+            //node_first.Actor.Position = new Vector2(100, 100);
+            //World.Instance.Add(node_first.Actor);
+
+            ActorFactory.Instance.LoadLevel("first_few");
+            //Actor[] spawnedActors = TagCollection.Instance.GetObjectsTagged("skill_node");
+            //if (spawnedActors != null)
+            //{
+            //    foreach (Actor a in spawnedActors)
+            //    {
+            //        //a.Position = new Vector2(30, 30);
+            //        World.Instance.Add(a);
+            //    }
+            //}
+
+            //SkillNode node;
+            
+            //node = SkillNode.Create();
+            //node.Location = new Vector2(50, 100);
+
+            //node = SkillNode.Create();
+            //node.Location = new Vector2(100, 100);
+            //node.Color = new Color(1.0f, 1.0f, 0.0f);
+
+            //node = SkillNode.Create();
+            //node.Location = new Vector2(-100, 150);
+            //node.Color = new Color(1.0f, 0.5f, 0.0f);
+
+            foreach (SkillNode _node in SkillWeb.Instance.Nodes)
+            {
+                World.Instance.Add(_node.Actor);
+            }
         }
 
         [ConsoleMethod]
         public object TestUpdateSkills(object[] aParams)
         {
             SkillNode node = skillWeb.Nodes.First();
-            SkillPointSet skillPointSet = new SkillPointSet(8, 10);
+            SkillNode node_two = skillWeb.Nodes[1];
+            node.SkillPointsModifier.GetModDels()[SkillPointType.Types.Blue] = x => { return x + 4; };
+            node_two.SkillPointsModifier.GetModDels()[SkillPointType.Types.Red] = x => { return x + 8; };
+            SkillPointSet skillPointSet = new SkillPointSet(0, 0);
+            Log.Instance.Log("===");
             skillPointSet.Report();
+            Log.Instance.Log("---");
             node.UpdateValues(skillPointSet);
             skillPointSet.Report();
-            Console.WriteLine("");
+            Log.Instance.Log("---");
+            node_two.UpdateValues(skillPointSet);
+            skillPointSet.Report();
+            Log.Instance.Log("===");
+            Log.Instance.Log("");
 
             return null;
         }
 
-        [ConsoleMethod]
-        public object TestUpdateSkills2(object[] aParams)
+        public void Quit()
         {
-            SkillNode node = skillWeb.Nodes.First();
-            SkillPointSet skillPointSet = new SkillPointSet(8, 10);
-
-            return null;
+            Exit();
         }
 
-        [ConsoleMethod]
-        public object TestUpdateSkills3(object[] aParams)
+        public object QuitFromConsole(object[] aParams)
         {
-            SkillNode node = skillWeb.Nodes.First();
-            SkillPointSet skillPointSet = new SkillPointSet(8, 10);
-            skillPointSet.Report();
-            node.UpdateValues(skillPointSet);
-            skillPointSet.Report();
-            Console.WriteLine("");
-
+            Quit();
             return null;
         }
 

@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
+using AngelXNA.Infrastructure.Logging;
+
 namespace DefineYourself.Skills
 {
-    class SkillPointSet
+    public class SkillPointSet
     {
-        //List<SkillPointType> PointTypes = new List<SkillPointType>();
-
         public List<SkillPointType> PointTypes { get; set; }
 
         public SkillPointSet(int red, int blue)
@@ -22,7 +22,7 @@ namespace DefineYourself.Skills
         {
             foreach (SkillPointType type in PointTypes)
             {
-                Console.WriteLine(type.Type.ToString() + ": " + type.Value.ToString());
+                Log.Instance.Log(type.Type.ToString() + ": " + type.Value.ToString());
             }
         }
     }

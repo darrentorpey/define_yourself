@@ -1,0 +1,19 @@
+﻿Using(SkillNode.Create())
+	Location = Vector2(500, 200)
+	Name = "Cafe"
+	IconName = "eng_icon"
+EndScope()
+
+Using(SkillNode.Create())
+	Name = "English"
+	IconName = "lib_icon"
+	Location = Vector2(0, 40)
+EndScope()
+
+Using(SkillNode.Create())
+	Location = Vector2(300, -100)
+	Name = "Physics"
+	IconName = "sci_icon"
+	Prereq("English")
+	Prereq("Cafe")
+EndScope()

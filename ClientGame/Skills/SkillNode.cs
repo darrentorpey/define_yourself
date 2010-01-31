@@ -3,27 +3,71 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework;
+
+using AngelXNA.Actors;
+using AngelXNA.Infrastructure.Console;
+
 namespace DefineYourself.Skills
 {
     class SkillNode
-    {
-        public string ID { get; set; }
+    {        
+        [ConsoleProperty]
         public string Name { get; set; }
-        public string Icon { get; set; }
-        public string Location { get; set; }
-        public string PointsNeeded { get; set; }
+        
+        [ConsoleProperty]
+        public string IconName { set { Actor.SetSprite(value); } }
+        
+        [ConsoleProperty]
+        public Vector2 Location { get { return Actor.Position; } set { Actor.Position = value; } }
+        
+        [ConsoleProperty]
+        public Color Color { get { return Actor.Color; } set { Actor.Color = value; } }
+        
+        [ConsoleProperty]
+        public int PointsNeeded { get; set; }
 
-        SkillPointsModifier skillPointsModifier = new SkillPointsModifier();
+        public void SetLocation(Vector2 loc)
+        {
+            Actor.Position = loc;
+        }
+        public SkillPointsModifier SkillPointsModifier { get; set; }
 
         public List<SkillNode> parents = new List<SkillNode>();
 
-        public SkillNode(string id)
+        public Actor Actor { get; set; }
+
+        private static List<SkillNode> s_Nodes = new List<SkillNode>();
+        public static List<SkillNode> Nodes { get { return s_Nodes; } set { s_Nodes = value; } }
+
+        public SkillNode()
         {
-            this.ID = id;
-            //this.skillPointsModifier.setType
+            Actor = new Actor();
+            Actor.Color = new Color(1.0f, 1.0f, 1.0f);
+            Actor.DrawShape = Actor.ActorDrawShape.Square;
+            Actor.Size = new Vector2(40, 40);
+            Actor.Tag("skill_node");
+
+            SkillPointsModifier = new SkillPointsModifier();
+            SkillNode.Nodes.Add(this);
+            SkillWeb.Instance.AddNode(this);
         }
 
-        public void AddParent(SkillNode skillNode)
+        public SkillNode(string name)
+        {
+
+            Actor = new Actor();
+            Name = name;
+            Actor.Size = new Vector2(40, 40);
+            Actor.Position = new Vector2(-256.0f, 0.0f);
+            Actor.Color = new Color(1.0f, 0.3f, 0.0f);
+            Actor.DrawShape = Actor.ActorDrawShape.Square;
+
+            SkillPointsModifier = new SkillPointsModifier();
+        }
+
+        public void AddPrereq(SkillNode skillNode)
         {
             parents.Add(skillNode);
         }
@@ -36,13 +80,19 @@ namespace DefineYourself.Skills
             }
         }
 
-        public String ToString()
+        public override String ToString()
         {
-            return this.ID.ToString();
+            return Name.ToString();
         }
 
         public void UpdateValues(SkillPointSet skillPointSet) {
-            skillPointsModifier.UpdateValues(skillPointSet);
+            SkillPointsModifier.UpdateValues(skillPointSet);
+        }
+
+        [ConsoleMethod]
+        public static new SkillNode Create()
+        {
+            return new SkillNode();
         }
     }
 }

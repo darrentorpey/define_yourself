@@ -5,20 +5,23 @@ using System.Text;
 
 namespace DefineYourself.Skills
 {
-    class SkillPointsModifier
+    public delegate int PointModDelegate(int x);
+    public class SkillPointsModifier
     {
+        private Dictionary<SkillPointType.Types, PointModDelegate> _modifierDels;
 
-        List<Delegate> modifierDelegates = new List<Delegate>();
-
-        delegate int SomeDelegate(int x);
-        Dictionary<string, SomeDelegate> modifierDels = new Dictionary<string, SomeDelegate>();
+        public Dictionary<SkillPointType.Types, PointModDelegate> GetModDels()
+        {
+            return _modifierDels;
+        }
 
         public SkillPointsModifier()
         {
+            _modifierDels = new Dictionary<SkillPointType.Types, PointModDelegate>();
             foreach (SkillPointType.Types type in Enum.GetValues(typeof(SkillPointType.Types)))
             {
                 //modifierDelegates.Add(((SomeDelegate)(delegate(int x) { return x; }));
-                modifierDels.Add(type.ToString(), delegate(int x) { return x + 2; });
+                _modifierDels.Add(type, delegate(int x) { return x; });
             }
             //foreach(Delegate del in modifierDelegates) {
             //    del.DynamicInvoke();
@@ -29,7 +32,7 @@ namespace DefineYourself.Skills
         {
             foreach (SkillPointType pointType in pointSet.PointTypes)
             {
-                SomeDelegate del = this.modifierDels[pointType.ToString()];
+                PointModDelegate del = _modifierDels[pointType.Type];
                 pointType.Value = (int)del.DynamicInvoke(pointType.Value);
             }
         }
