@@ -17,6 +17,9 @@ namespace DefineYourself
     {
         public static List<Actor> BuildingList { get; set; }
 
+        [ConsoleProperty]
+        public Vector2 Location { get { return Position; } set { Position = new Vector2(value.X - 512, 384 - value.Y); } }
+
         public MapSpot()
         {
             Size = new Vector2(40, 40);

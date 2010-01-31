@@ -1,9 +1,120 @@
-﻿ActorFactory.InitializeActor(MapSpot.Create())
-	Position = Vector2(-200, 200)
-	Name = "First Name"
+﻿
+ActorFactory.InitializeActor(MapSpot.Create())
+       Name = "Undefined"
+       Location = Vector2(258, 50)
 EndScope()
 
 ActorFactory.InitializeActor(MapSpot.Create())
-	Position = Vector2(-200, -200)
-	Name = "Second Name"
+       Name = "Metallurgy"
+       Location = Vector2(260, 120)
+EndScope()
+
+ActorFactory.InitializeActor(MapSpot.Create())
+       Name = "Legos"
+       Location = Vector2(46, 188)
+EndScope()
+
+ActorFactory.InitializeActor(MapSpot.Create())
+       Name = "Mechanical Engineering"
+       Location = Vector2(118, 187)
+EndScope()
+
+ActorFactory.InitializeActor(MapSpot.Create())
+       Name = "Robotics"
+       Location = Vector2(190, 186)
+EndScope()
+
+ActorFactory.InitializeActor(MapSpot.Create())
+       Name = "Plasma"
+       Location = Vector2(258, 187)
+EndScope()
+
+ActorFactory.InitializeActor(MapSpot.Create())
+       Name = "Undefined"
+       Location = Vector2(117, 225)
+EndScope()
+
+ActorFactory.InitializeActor(MapSpot.Create())
+       Name = "Undefined"
+       Location = Vector2(190, 225)
+EndScope()
+
+ActorFactory.InitializeActor(MapSpot.Create())
+       Name = "Nano-construction"
+       Location = Vector2(258, 254)
+EndScope()
+
+ActorFactory.InitializeActor(MapSpot.Create())
+       Name = "Biology"
+       Location = Vector2(328, 255)
+EndScope()
+
+ActorFactory.InitializeActor(MapSpot.Create())
+       Name = "Computer Science"
+       Location = Vector2(395, 255)
+EndScope()
+
+ActorFactory.InitializeActor(MapSpot.Create())
+       Name = "Undefined"
+       Location = Vector2(461, 254)
+EndScope()
+
+ActorFactory.InitializeActor(MapSpot.Create())
+       Name = "Physics"
+       Location = Vector2(259, 323)
+EndScope()
+
+ActorFactory.InitializeActor(MapSpot.Create())
+       Name = "Chemistry"
+       Location = Vector2(328, 322)
+EndScope()
+
+ActorFactory.InitializeActor(MapSpot.Create())
+       Name = "Medicine"
+       Location = Vector2(259, 391)
+EndScope()
+
+ActorFactory.InitializeActor(MapSpot.Create())
+       Name = "Microsoft Word"
+       Location = Vector2(258, 461)
+EndScope()
+
+ActorFactory.InitializeActor(MapSpot.Create())
+       Name = "Psychology"
+       Location = Vector2(41, 529)
+EndScope()
+
+ActorFactory.InitializeActor(MapSpot.Create())
+       Name = "Political Science"
+       Location = Vector2(114, 527)
+EndScope()
+
+ActorFactory.InitializeActor(MapSpot.Create())
+       Name = "Fundraising"
+       Location = Vector2(187, 529)
+EndScope()
+
+ActorFactory.InitializeActor(MapSpot.Create())
+       Name = "Hypnosis"
+       Location = Vector2(256, 528)
+EndScope()
+
+ActorFactory.InitializeActor(MapSpot.Create())
+       Name = "Undefined"
+       Location = Vector2(320, 530)
+EndScope()
+
+ActorFactory.InitializeActor(MapSpot.Create())
+       Name = "Campaign Management"
+       Location = Vector2(259, 599)
+EndScope()
+
+ActorFactory.InitializeActor(MapSpot.Create())
+       Name = "Mass Hypnosis Machine"
+       Location = Vector2(259, 668)
+EndScope()
+
+ActorFactory.InitializeActor(MapSpot.Create())
+       Name = "Undefined"
+       Location = Vector2(259, 736)
 EndScope()

@@ -40,9 +40,15 @@ namespace DefineYourself
         SpriteBatch spriteBatch;
         SkillWeb skillWeb;
         List<Actor> buildingList;
-        TextActor text, text2;
+        TextActor statusTextP1, statusTextP2;
         Boolean p1Earning = false;
         Boolean p2Earning = false;
+        TextActor clock;
+
+        private float _fGameMinutesElapsed = 0.0f;
+        private float _fTimeLastedLastTime = 0.0f;
+
+        private static float TIME_YOU_HAVE_TO_WIN = 5.0f;
 
         public ClientGame()
         {
@@ -66,6 +72,9 @@ namespace DefineYourself
             MusicState.LoadContent(Content);
         }
 
+        public TextActor StatusTextP1 { get { return statusTextP1; } }
+        public TextActor StatusTextP2 { get { return statusTextP2; } }
+
         /// <summary>
         /// Allows the game to perform any initialization it needs to before starting to run.
         /// This is where it can query for any required services and load any non-graphic
@@ -82,6 +91,11 @@ namespace DefineYourself
             InitializeMap();
             
             InitializeSkillWeb();
+
+            clock = new TextActor("Tiny", "Time Left: ");
+            clock.Color = Color.Black;
+            clock.Position = new Vector2(-120, 370);
+            World.Instance.Add(clock);
 
             // Set the camera up somewhere "above" the grid
             World.Instance.Camera.Position = new Vector3(0.0f, 0.0f, 400.0f);
@@ -102,17 +116,7 @@ namespace DefineYourself
 
         protected void InitializeSkillWeb()
         {
-            skillWeb = new SkillWeb();
-
-            //SkillNode node_first = new SkillNode("C");
-            //SkillNode parent_one = new SkillNode("A");
-            //SkillNode parent_two = new SkillNode("B");
-            //node_first.AddPrereq(parent_one);
-            //node_first.AddPrereq(parent_two);
-            //node_first.Report();
-            //skillWeb.AddNode(node_first);
-            //skillWeb.AddNode(parent_one);
-            //skillWeb.AddNode(parent_two);
+            SkillWeb.Instance.Game = this;
 
             DeveloperConsole.Instance.ItemManager.AddCommand("TestUpdateSkills", new ConsoleCommandHandler(TestUpdateSkills));
             DeveloperConsole.Instance.ItemManager.AddCommand("Quit", new ConsoleCommandHandler(QuitFromConsole));
@@ -121,6 +125,7 @@ namespace DefineYourself
                 Quit();
             });
 
+            iconTextureOne = Content.Load<Texture2D>("map2");
             iconTextureOne = Content.Load<Texture2D>("eng_icon");
             iconTextureOne = Content.Load<Texture2D>("lib_icon");
             iconTextureOne = Content.Load<Texture2D>("sci_icon");
@@ -185,6 +190,7 @@ namespace DefineYourself
                 helveticaSmall = Content.Load<SpriteFont>("fonts/HelveticaSmall");
 
                 FontCache.Instance.RegisterFont("fonts\\HelveticaTiny", "Tiny");
+                FontCache.Instance.RegisterFont("fonts\\HelveticaSmall", "Small");
 
                 TextActor nameText = new TextActor("Tiny", _node.Name, TextActor.Alignment.Center);
                 nameText.Position = new Vector2(_node.Actor.Position.X - 20, _node.Actor.Position.Y - 30);
@@ -235,11 +241,9 @@ namespace DefineYourself
             Actor campus = new Actor();
             campus.Size = new Vector2(512.0f, 768.0f);
             campus.Position = new Vector2(-256.0f, 0.0f);
-            campus.Color = new Color(1.0f, 0.0f, 0.0f);
             campus.DrawShape = Actor.ActorDrawShape.Square;
+            campus.SetSprite("map2");
             World.Instance.Add(campus);
-
-
 
             // tech web/tree panel
             Actor tech = new Actor();
@@ -249,89 +253,58 @@ namespace DefineYourself
             tech.DrawShape = Actor.ActorDrawShape.Square;
             World.Instance.Add(tech);
 
-            // Biology
-            Actor building1 = new Actor();
-            building1.Size = new Vector2(100.0f, 100.0f);
-            building1.Position = new Vector2(-256.0f, -192.0f);
-            building1.DrawShape = Actor.ActorDrawShape.Square;
-            building1.SetSprite("Art/lib_bldg");
-            building1.Name = "Biology";
-            buildingList.Add(building1);
-            World.Instance.Add(building1);
-
-            // Chemistry
-            Actor building2 = new Actor();
-            building2.Size = new Vector2(100.0f, 150.0f);
-            building2.Position = new Vector2(-256.0f, 192.0f);
-            building2.Color = new Color(1.0f, 0.2f, 0.0f);
-            building2.DrawShape = Actor.ActorDrawShape.Square;
-            building2.Name = "Chemistry";
-            buildingList.Add(building2);
-            World.Instance.Add(building2);
-
-            // Medicine
-            Actor building3 = new Actor();
-            building3.Size = new Vector2(100.0f, 100.0f);
-            building3.Position = new Vector2(-256.0f, -92.0f);
-            building2.Color = new Color(0.2f, 0.2f, 0.0f);
-            building3.DrawShape = Actor.ActorDrawShape.Square;
-            building3.SetSprite("Art/lib_bldg");
-            building3.Name = "Medicine";
-            buildingList.Add(building3);
-            World.Instance.Add(building3);
-
             // Player 1
             Actor player1 = new Actor();
             player1.Size = new Vector2(30.0f, 30.0f);
-            player1.Position = new Vector2(-256.0f, 0.0f);
+            player1.Position = new Vector2(-450.0f, 350.0f);
             player1.Color = new Color(1.0f, 1.0f, 1.0f);
             player1.DrawShape = Actor.ActorDrawShape.Square;
             World.Instance.Add(player1);
             player1.Name = "Player 1";
 
             // player 1 input
-            DeveloperConsole.Instance.ItemManager.AddCommand("UpPressed", new ConsoleCommandHandler(MoveUp));
-            DeveloperConsole.Instance.ItemManager.AddCommand("DownPressed", new ConsoleCommandHandler(MoveDown));
-            DeveloperConsole.Instance.ItemManager.AddCommand("LeftPressed", new ConsoleCommandHandler(MoveLeft));
-            DeveloperConsole.Instance.ItemManager.AddCommand("RightPressed", new ConsoleCommandHandler(MoveRight));
+            DeveloperConsole.Instance.ItemManager.AddCommand("UpPressed", new ConsoleCommandHandler(MoveUp2));
+            DeveloperConsole.Instance.ItemManager.AddCommand("DownPressed", new ConsoleCommandHandler(MoveDown2));
+            DeveloperConsole.Instance.ItemManager.AddCommand("LeftPressed", new ConsoleCommandHandler(MoveLeft2));
+            DeveloperConsole.Instance.ItemManager.AddCommand("RightPressed", new ConsoleCommandHandler(MoveRight2));
 
-            Switchboard.Instance["UpPressed"] += new MessageHandler(x => MoveUp(null));
-            Switchboard.Instance["DownPressed"] += new MessageHandler(x => MoveDown(null));
-            Switchboard.Instance["LeftPressed"] += new MessageHandler(x => MoveLeft(null));
-            Switchboard.Instance["RightPressed"] += new MessageHandler(x => MoveRight(null));
+            Switchboard.Instance["UpPressed"] += new MessageHandler(x => MoveUp2(null));
+            Switchboard.Instance["DownPressed"] += new MessageHandler(x => MoveDown2(null));
+            Switchboard.Instance["LeftPressed"] += new MessageHandler(x => MoveLeft2(null));
+            Switchboard.Instance["RightPressed"] += new MessageHandler(x => MoveRight2(null));
 
             // Player 2
             Actor player2 = new Actor();
             player2.Size = new Vector2(30.0f, 30.0f);
-            player2.Position = new Vector2(-256.0f, -50.0f);
+            player2.Position = new Vector2(-60.0f, -350.0f);
             player2.Color = new Color(0.0f, 0.0f, 0.0f);
             player2.DrawShape = Actor.ActorDrawShape.Square;
             World.Instance.Add(player2);
             player2.Name = "Player 2";
 
             // Player 2 input
-            DeveloperConsole.Instance.ItemManager.AddCommand("WPressed", new ConsoleCommandHandler(MoveUp2));
-            DeveloperConsole.Instance.ItemManager.AddCommand("SPressed", new ConsoleCommandHandler(MoveDown2));
-            DeveloperConsole.Instance.ItemManager.AddCommand("APressed", new ConsoleCommandHandler(MoveLeft2));
-            DeveloperConsole.Instance.ItemManager.AddCommand("DPressed", new ConsoleCommandHandler(MoveRight2));
+            DeveloperConsole.Instance.ItemManager.AddCommand("WPressed", new ConsoleCommandHandler(MoveUp));
+            DeveloperConsole.Instance.ItemManager.AddCommand("SPressed", new ConsoleCommandHandler(MoveDown));
+            DeveloperConsole.Instance.ItemManager.AddCommand("APressed", new ConsoleCommandHandler(MoveLeft));
+            DeveloperConsole.Instance.ItemManager.AddCommand("DPressed", new ConsoleCommandHandler(MoveRight));
 
-            Switchboard.Instance["WPressed"] += new MessageHandler(x => MoveUp2(null));
-            Switchboard.Instance["SPressed"] += new MessageHandler(x => MoveDown2(null));
-            Switchboard.Instance["APressed"] += new MessageHandler(x => MoveLeft2(null));
-            Switchboard.Instance["DPressed"] += new MessageHandler(x => MoveRight2(null));
+            Switchboard.Instance["WPressed"] += new MessageHandler(x => MoveUp(null));
+            Switchboard.Instance["SPressed"] += new MessageHandler(x => MoveDown(null));
+            Switchboard.Instance["APressed"] += new MessageHandler(x => MoveLeft(null));
+            Switchboard.Instance["DPressed"] += new MessageHandler(x => MoveRight(null));
 
-            // tech listener
-            text = new TextActor();
-            text.Position = new Vector2(256.0f, 0.0f);
-            text.Name = "Tree";
-            World.Instance.Add(text);
+            // P1 Status
+            statusTextP1 = new TextActor("Small", "");
+            statusTextP1.Position = new Vector2(-480.0f, -350.0f);
+            statusTextP1.Name = "P1_Status";
+            World.Instance.Add(statusTextP1);
             Switchboard.Instance["Collision"] += new MessageHandler(x => TreeListener(x.Sender));
 
-            // tech listener
-            text2 = new TextActor();
-            text2.Position = new Vector2(256.0f, 100.0f);
-            text2.Name = "Tree";
-            World.Instance.Add(text2);
+            // P2 Status
+            statusTextP2 = new TextActor("Small", "");
+            statusTextP2.Position = new Vector2(-200.0f, -350.0f);
+            statusTextP2.Name = "P2_Status";
+            World.Instance.Add(statusTextP2);
             Switchboard.Instance["Collision"] += new MessageHandler(x => TreeListener(x.Sender));
             Switchboard.Instance["SkillUpdate"] += new MessageHandler(x => UpdateListener(x.Sender));
 
@@ -427,14 +400,14 @@ namespace DefineYourself
         // When a Collision message is broadcast, this updates the Tree TextActor with the name of the building that was collided with
         public object TreeListener(object aParams)
         {
-            if (((MessageObject)aParams).play.Name == "Player 1")
-            {
-                text.DisplayString = ((MessageObject)aParams).bldg.Name;
-            }
-            else
-            {
-                text2.DisplayString = ((MessageObject)aParams).bldg.Name;
-            }
+            //if (((MessageObject)aParams).play.Name == "Player 1")
+            //{
+            //    statusTextP1.DisplayString = ((MessageObject)aParams).bldg.Name;
+            //}
+            //else
+            //{
+            //    statusTextP2.DisplayString = ((MessageObject)aParams).bldg.Name;
+            //}
             return null;
         }
 
@@ -451,12 +424,12 @@ namespace DefineYourself
             {
                 if (((MessageObject)aParams).boolie)
                 {
-                    text.DisplayString = "P1 Updating!";
+                    //statusTextP1.DisplayString = "P1 Updating!";
                     p1Earning = true;
                 }
                 else
                 {
-                    text.DisplayString = "P1 not earning";
+                    //statusTextP1.DisplayString = "P1 not earning";
                     p1Earning = false;
                 }
             }
@@ -464,12 +437,12 @@ namespace DefineYourself
             {
                 if (((MessageObject)aParams).boolie)
                 {
-                    text2.DisplayString = "P2 Updating!";
+                    //statusTextP2.DisplayString = "P2 Updating!";
                     p2Earning = true;
                 }
                 else
                 {
-                    text2.DisplayString = "P2 not earning";
+                    //statusTextP2.DisplayString = "P2 not earning";
                     p2Earning = false;
                 }
             }
@@ -501,7 +474,7 @@ namespace DefineYourself
                 }
                 else
                 {
-                    text.DisplayString = "Tree";
+                    //text.DisplayString = "Tree";
                    // SoundState.Instance.SoundOff();
                    // MusicState.Instance.ActiveSong = 0;
                 }
@@ -529,7 +502,7 @@ namespace DefineYourself
                 }
                 else
                 {
-                    text2.DisplayString = "Tree";
+                    //statusTextP2.DisplayString = "Tree";
                     // SoundState.Instance.SoundOff();
                    // MusicState.Instance.ActiveSong = 0;
                 }
@@ -563,11 +536,24 @@ namespace DefineYourself
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
+            statusTextP1.DisplayString = "";
+            statusTextP1.Color = Color.White;
+            statusTextP2.DisplayString = "";
+            statusTextP2.Color = Color.Black;
+
             // Allows the game to exit
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 this.Exit();
 
-            // TODO: Add your update logic here
+            _fGameMinutesElapsed += (float)gameTime.ElapsedGameTime.TotalMinutes;
+
+            float timeLeft = TIME_YOU_HAVE_TO_WIN - _fGameMinutesElapsed;
+
+            int totalMinutesLeft = (int)timeLeft;
+            int totalSecondsLeft = (int)((timeLeft - totalMinutesLeft) * 60);
+
+            string timeElapsed = String.Format("Time Left: {0}:{1:00}", totalMinutesLeft, totalSecondsLeft);
+            clock.DisplayString = timeElapsed;
 
             // TV: Checking each tick for the player to be colliding with a building
             PlayerAtBuilding();
