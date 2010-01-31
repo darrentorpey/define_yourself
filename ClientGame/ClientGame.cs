@@ -126,6 +126,8 @@ namespace DefineYourself
             });
 
             iconTextureOne = Content.Load<Texture2D>("map2");
+            iconTextureOne = Content.Load<Texture2D>("avatar1");
+            iconTextureOne = Content.Load<Texture2D>("avatar2");
             iconTextureOne = Content.Load<Texture2D>("eng_icon");
             iconTextureOne = Content.Load<Texture2D>("lib_icon");
             iconTextureOne = Content.Load<Texture2D>("sci_icon");
@@ -255,10 +257,11 @@ namespace DefineYourself
 
             // Player 1
             Actor player1 = new Actor();
-            player1.Size = new Vector2(30.0f, 30.0f);
+            player1.Size = new Vector2(14.0f, 35.0f);
             player1.Position = new Vector2(-450.0f, 350.0f);
             player1.Color = new Color(1.0f, 1.0f, 1.0f);
             player1.DrawShape = Actor.ActorDrawShape.Square;
+            player1.SetSprite("avatar1");
             World.Instance.Add(player1);
             player1.Name = "Player 1";
 
@@ -275,10 +278,11 @@ namespace DefineYourself
 
             // Player 2
             Actor player2 = new Actor();
-            player2.Size = new Vector2(30.0f, 30.0f);
+            player2.Size = new Vector2(14.0f, 35.0f);
             player2.Position = new Vector2(-60.0f, -350.0f);
             player2.Color = new Color(0.0f, 0.0f, 0.0f);
             player2.DrawShape = Actor.ActorDrawShape.Square;
+            player2.SetSprite("avatar2");
             World.Instance.Add(player2);
             player2.Name = "Player 2";
 
