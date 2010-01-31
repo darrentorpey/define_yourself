@@ -177,6 +177,35 @@ namespace DefineYourself
             foreach (SkillNode _node in SkillWeb.Instance.Nodes)
             {
                 World.Instance.Add(_node.Actor);
+
+                Actor p1_bar = new Actor();
+                p1_bar.Position = new Vector2(_node.Actor.Position.X - 30, _node.Actor.Position.Y);
+                p1_bar.Size = new Vector2(10, 40);
+                p1_bar.Color = Color.White;
+                p1_bar.DrawShape = Actor.ActorDrawShape.Square;
+                World.Instance.Add(p1_bar);
+                _node.P1_ProgBar = p1_bar;
+                _node.P1_Points = 40;
+
+                Actor p2_bar = new Actor();
+                p2_bar.Position = new Vector2(_node.Actor.Position.X + 30, _node.Actor.Position.Y);
+                p2_bar.Size = new Vector2(10, 40);
+                p2_bar.Color = Color.Black;
+                p2_bar.DrawShape = Actor.ActorDrawShape.Square;
+                World.Instance.Add(p2_bar);
+                _node.P2_ProgBar = p2_bar;
+                _node.P2_Points = 20;
+
+                SpriteFont helveticaTiny;
+                SpriteFont helveticaSmall;
+                helveticaTiny = Content.Load<SpriteFont>("fonts/HelveticaTiny");
+                helveticaSmall = Content.Load<SpriteFont>("fonts/HelveticaSmall");
+
+                FontCache.Instance.RegisterFont("fonts\\HelveticaTiny", "Tiny");
+
+                TextActor nameText = new TextActor("Tiny", _node.Name, TextActor.Alignment.Center);
+                nameText.Position = new Vector2(_node.Actor.Position.X - 20, _node.Actor.Position.Y - 30);
+                World.Instance.Add(nameText);
             }
         }
 
@@ -472,6 +501,8 @@ namespace DefineYourself
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
+
+            SkillWeb.Instance.Nodes.ForEach(skillNode => { skillNode.Draw(); });
             // TODO: Add your drawing code here
 
             base.Draw(gameTime);
