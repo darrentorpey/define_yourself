@@ -50,8 +50,21 @@ namespace DefineYourself
 
         private static float TIME_YOU_HAVE_TO_WIN = 5.0f;
 
+        public enum GameState
+        {
+            Running = 0,
+            Start = 1,
+            Paused = 2,
+            Help = 3,
+            Victory = 4,
+            GameOver = 5
+        }
+        public GameState CurrentGameState { get; set; }
+
         public ClientGame()
         {
+            CurrentGameState = GameState.Start;
+
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             
@@ -75,6 +88,15 @@ namespace DefineYourself
         public TextActor StatusTextP1 { get { return statusTextP1; } }
         public TextActor StatusTextP2 { get { return statusTextP2; } }
 
+        private Actor startSheet;
+        private Actor pauseSheet;
+        private Actor endSheet;
+        private TextActor pTextP1;
+        private TextActor startSheetText;
+        private TextActor endSheetText;
+        private TextActor endSheetScoreP1;
+        private TextActor endSheetScoreP2;
+
         /// <summary>
         /// Allows the game to perform any initialization it needs to before starting to run.
         /// This is where it can query for any required services and load any non-graphic
@@ -87,6 +109,41 @@ namespace DefineYourself
 
             // Add the default grid so we can see where our Actors are in the world
             World.Instance.Add(new GridActor());
+
+            pTextP1 = new TextActor("Small", "PAUSED");
+            World.Instance.Add(pTextP1, 3);
+
+            startSheetText = new TextActor("Small", "");
+            World.Instance.Add(startSheetText, 3);
+
+            endSheetText = new TextActor("Small", "Define Yourself IS OVER");
+            World.Instance.Add(endSheetText, 3);
+
+            endSheetScoreP1 = new TextActor("Small", "SCORE 1");
+            endSheetScoreP1.Position = new Vector2(-300, 200);
+            World.Instance.Add(endSheetScoreP1, 3);
+
+            endSheetScoreP2 = new TextActor("Small", "SCORE 2");
+            endSheetScoreP2.Position = new Vector2(300, 200);
+            World.Instance.Add(endSheetScoreP2, 3);
+
+            pauseSheet = new Actor();
+            pauseSheet.Size = new Vector2(1024.0f, 768.0f);
+            pauseSheet.Position = new Vector2(0.0f, 0.0f);
+            pauseSheet.DrawShape = Actor.ActorDrawShape.Square;
+            World.Instance.Add(pauseSheet, 2);
+
+            startSheet = new Actor();
+            startSheet.Size = new Vector2(1024.0f, 768.0f);
+            startSheet.Position = new Vector2(0.0f, 0.0f);
+            startSheet.DrawShape = Actor.ActorDrawShape.Square;
+            World.Instance.Add(startSheet, 2);
+
+            endSheet = new Actor();
+            endSheet.Size = new Vector2(1024.0f, 768.0f);
+            endSheet.Position = new Vector2(0.0f, 0.0f);
+            endSheet.DrawShape = Actor.ActorDrawShape.Square;
+            World.Instance.Add(endSheet, 2);
 
             InitializeMap();
             
@@ -121,11 +178,9 @@ namespace DefineYourself
             DeveloperConsole.Instance.ItemManager.AddCommand("TestUpdateSkills", new ConsoleCommandHandler(TestUpdateSkills));
             DeveloperConsole.Instance.ItemManager.AddCommand("Quit", new ConsoleCommandHandler(QuitFromConsole));
 
-            Switchboard.Instance["Quit"] -= new MessageHandler(delegate(Message message) {
-                Quit();
-            });
-
-            iconTextureOne = Content.Load<Texture2D>("map2");
+            iconTextureOne = Content.Load<Texture2D>("map");
+            iconTextureOne = Content.Load<Texture2D>("tech_tree");
+            iconTextureOne = Content.Load<Texture2D>("titlescreen");
             iconTextureOne = Content.Load<Texture2D>("avatar1");
             iconTextureOne = Content.Load<Texture2D>("avatar2");
             iconTextureOne = Content.Load<Texture2D>("eng_icon");
@@ -194,9 +249,9 @@ namespace DefineYourself
                 FontCache.Instance.RegisterFont("fonts\\HelveticaTiny", "Tiny");
                 FontCache.Instance.RegisterFont("fonts\\HelveticaSmall", "Small");
 
-                TextActor nameText = new TextActor("Tiny", _node.Name, TextActor.Alignment.Center);
-                nameText.Position = new Vector2(_node.Actor.Position.X - 20, _node.Actor.Position.Y - 30);
-                World.Instance.Add(nameText);
+                //TextActor nameText = new TextActor("Tiny", _node.Name, TextActor.Alignment.Center);
+                //nameText.Position = new Vector2(_node.Actor.Position.X - 20, _node.Actor.Position.Y - 30);
+                //World.Instance.Add(nameText);
             }
 
             Switchboard.Instance["Collision"] += new MessageHandler(x => UpdateSkillProgress(x.Sender));
@@ -224,14 +279,9 @@ namespace DefineYourself
             return null;
         }
 
-        public void Quit()
-        {
-            Exit();
-        }
-
         public object QuitFromConsole(object[] aParams)
         {
-            Quit();
+            this.Exit();
             return null;
         }
 
@@ -244,15 +294,16 @@ namespace DefineYourself
             campus.Size = new Vector2(512.0f, 768.0f);
             campus.Position = new Vector2(-256.0f, 0.0f);
             campus.DrawShape = Actor.ActorDrawShape.Square;
-            campus.SetSprite("map2");
+            campus.SetSprite("map");
             World.Instance.Add(campus);
 
             // tech web/tree panel
             Actor tech = new Actor();
             tech.Size = new Vector2(512.0f, 768.0f);
             tech.Position = new Vector2(256.0f, 0.0f);
-            tech.Color = new Color(0.0f, 0.0f, 1.0f);
+            //tech.Color = new Color(0.0f, 0.0f, 1.0f, 0.5f);
             tech.DrawShape = Actor.ActorDrawShape.Square;
+            tech.SetSprite("tech_tree");
             World.Instance.Add(tech);
 
             // Player 1
@@ -297,6 +348,21 @@ namespace DefineYourself
             Switchboard.Instance["APressed"] += new MessageHandler(x => MoveLeft(null));
             Switchboard.Instance["DPressed"] += new MessageHandler(x => MoveRight(null));
 
+
+            // Quick Keyboard Hack
+            DeveloperConsole.Instance.ItemManager.AddCommand("Pause", new ConsoleCommandHandler(Pause));
+            DeveloperConsole.Instance.ItemManager.AddCommand("UnPause", new ConsoleCommandHandler(UnPause));
+            DeveloperConsole.Instance.ItemManager.AddCommand("Quit", new ConsoleCommandHandler(QuitFromConsole));
+            DeveloperConsole.Instance.ItemManager.AddCommand("Start", new ConsoleCommandHandler(Start));
+            DeveloperConsole.Instance.ItemManager.AddCommand("Victory", new ConsoleCommandHandler(Victory));
+            DeveloperConsole.Instance.ItemManager.AddCommand("Lose", new ConsoleCommandHandler(Lose));
+            Switchboard.Instance["Pause"] += new MessageHandler(x => Pause(null));
+            Switchboard.Instance["UnPause"] += new MessageHandler(x => UnPause(null));
+            Switchboard.Instance["Quit"] += new MessageHandler(x => QuitFromConsole(null));
+            Switchboard.Instance["Start"] += new MessageHandler(x => Start(null));
+            Switchboard.Instance["Victory"] += new MessageHandler(x => Victory(null));
+            Switchboard.Instance["Lose"] += new MessageHandler(x => Lose(null));
+
             // P1 Status
             statusTextP1 = new TextActor("Small", "");
             statusTextP1.Position = new Vector2(-480.0f, -350.0f);
@@ -316,6 +382,55 @@ namespace DefineYourself
    
             // Add (invisible) map squares
             ActorFactory.Instance.LoadLevel("map_spots");
+        }
+
+        // Handles the Up arrow - Player one moves up
+        public object Start(object[] aParams)
+        {
+            CurrentGameState = GameState.Running;
+            return null;
+        }
+
+        // Handles the Up arrow - Player one moves up
+        public object Victory(object[] aParams)
+        {
+            CurrentGameState = GameState.Victory;
+            return null;
+        }
+
+        // Handles the Up arrow - Player one moves up
+        public object Lose(object[] aParams)
+        {
+            CurrentGameState = GameState.GameOver;
+            return null;
+        }
+
+        // Handles the Up arrow - Player one moves up
+        public object Pause(object[] aParams)
+        {
+            if (CurrentGameState == GameState.Paused)
+            {
+                //CurrentGameState = GameState.Running;
+            }
+            else
+            {
+                CurrentGameState = GameState.Paused;
+            }
+            return null;
+        }
+
+        // Handles the Up arrow - Player one moves up
+        public object UnPause(object[] aParams)
+        {
+            if (CurrentGameState == GameState.Paused)
+            {
+                CurrentGameState = GameState.Running;
+            }
+            else
+            {
+                //CurrentGameState = GameState.Paused;
+            }
+            return null;
         }
 
         // Handles the Up arrow - Player one moves up
@@ -540,6 +655,47 @@ namespace DefineYourself
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
+
+            pTextP1.Color = new Color(0, 0, 0, 0);
+            pauseSheet.Color = new Color(0, 0, 0, 0);
+
+            startSheetText.Color = new Color(0, 0, 0, 0);
+
+            endSheetScoreP1.Color = new Color(0, 0, 0, 0);
+            endSheetScoreP2.Color = new Color(0, 0, 0, 0);
+            endSheet.Color = new Color(0, 0, 0, 0);
+            endSheetText.Color = new Color(0, 0, 0, 0);
+
+            if (CurrentGameState == GameState.Paused)
+            {
+                pauseSheet.Color = Color.Black;
+                pauseSheet.SetSprite("map");
+                //pTextP1.DisplayString = "PAUSED";
+                pTextP1.Color = Color.White;
+            }
+            else if (CurrentGameState == GameState.Start)
+            {
+                startSheet.SetSprite("titlescreen");
+                startSheetText.Color = Color.White;
+            }
+            else if (CurrentGameState == GameState.Victory || CurrentGameState == GameState.GameOver)
+            {
+                endSheetScoreP1.Color = Color.White;
+                endSheetScoreP1.DisplayString = "Player 1 gained " + SkillWeb.Instance.GetScoreP1() + " skills";
+                endSheetScoreP2.Color = Color.White;
+                endSheetScoreP2.DisplayString = "Player 2 gained " + SkillWeb.Instance.GetScoreP2() + " skills";
+                endSheet.Color = Color.Black;
+                endSheetText.Color = Color.White;
+            }
+            else
+            {
+            }
+
+            if (CurrentGameState != GameState.Start)
+            {
+                startSheet.Color = new Color(0, 0, 0, 0);
+            }
+
             statusTextP1.DisplayString = "";
             statusTextP1.Color = Color.White;
             statusTextP2.DisplayString = "";
@@ -549,9 +705,17 @@ namespace DefineYourself
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 this.Exit();
 
-            _fGameMinutesElapsed += (float)gameTime.ElapsedGameTime.TotalMinutes;
+            if (CurrentGameState != GameState.Paused)
+            {
+                _fGameMinutesElapsed += (float)gameTime.ElapsedGameTime.TotalMinutes;
+            }
 
             float timeLeft = TIME_YOU_HAVE_TO_WIN - _fGameMinutesElapsed;
+
+            if (timeLeft <= 0)
+            {
+                CurrentGameState = GameState.GameOver;
+            }
 
             int totalMinutesLeft = (int)timeLeft;
             int totalSecondsLeft = (int)((timeLeft - totalMinutesLeft) * 60);

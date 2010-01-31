@@ -62,6 +62,20 @@ namespace DefineYourself.Skills
             return Nodes.Find(x => { return ((x.Name == name) && (x.ActiveForPlayer(playerName))); });
         }
 
+        public int GetScoreP1()
+        {
+            int sum = 0;
+            Nodes.ForEach(node => { if (node.Completed("Player 1")) { sum += 1; } });
+            return sum;
+        }
+
+        public int GetScoreP2()
+        {
+            int sum = 0;
+            Nodes.ForEach(node => { if (node.Completed("Player 2")) { sum += 1; } });
+            return sum;
+        }
+
         private bool updatePlayerSkillProgress(Actor player, string skillName)
         {
             bool updated = false;

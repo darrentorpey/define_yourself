@@ -18,7 +18,9 @@ namespace DefineYourself.Skills
         public string Name { get; set; }
         
         [ConsoleProperty]
-        public string IconName { set { Actor.SetSprite(value); } }
+        public string IconName { set { 
+            //Actor.SetSprite(value);
+        }}
         
         [ConsoleProperty]
         public Vector2 Location { get { return Actor.Position; } set { Actor.Position = new Vector2(value.X, 384 - value.Y); } }
@@ -31,7 +33,8 @@ namespace DefineYourself.Skills
         public int P2_Points { get; set; }
         public Actor P2_ProgBar { get; set; }
 
-        public int PointsNeeded { get; set; }
+        private int _pointsNeeed;
+        public int PointsNeeded { get { return _pointsNeeed; } set { _pointsNeeed = value * 10; } }
 
         public void SetLocation(Vector2 loc)
         {
@@ -41,7 +44,7 @@ namespace DefineYourself.Skills
 
         public List<SkillNode> prereqs = new List<SkillNode>();
 
-        public static int ProgressBarHeight = 40;
+        public static int ProgressBarHeight = 50;
 
         public Actor Actor { get; set; }
 
@@ -51,7 +54,7 @@ namespace DefineYourself.Skills
         public SkillNode()
         {
             Actor = new Actor();
-            Actor.Color = new Color(1.0f, 1.0f, 1.0f);
+            Actor.Color = new Color(1.0f, 1.0f, 1.0f, 0.0f);
             Actor.DrawShape = Actor.ActorDrawShape.Square;
             Actor.Size = new Vector2(40, 40);
             Actor.Tag("skill_node");
