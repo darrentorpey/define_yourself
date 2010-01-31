@@ -88,6 +88,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="ClientGame.cs" />
+    <Compile Include="Skills\SkillNode.cs" />
+    <Compile Include="Skills\SkillPointSet.cs" />
+    <Compile Include="Skills\SkillPointsModifier.cs" />
+    <Compile Include="Skills\SkillPointType.cs" />
     <Compile Include="Skills\SkillWeb.cs" />
     <Compile Include="SoundState.cs" />
   </ItemGroup>

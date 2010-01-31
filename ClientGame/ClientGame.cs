@@ -99,7 +99,6 @@ namespace DefineYourself
             InitializeMap();
 
             InitializeSkillWeb();
-            skillWeb = new SkillWeb();
 
             // Set the camera up somewhere "above" the grid
             World.Instance.Camera.Position = new Vector3(0.0f, 0.0f, 400.0f);
@@ -118,7 +117,56 @@ namespace DefineYourself
         protected void InitializeSkillWeb()
         {
             // This is Darren's turf, to start
+            skillWeb = new SkillWeb();
 
+            SkillNode node_first = new SkillNode("C");
+            SkillNode parent_one = new SkillNode("A");
+            SkillNode parent_two = new SkillNode("B");
+            node_first.AddParent(parent_one);
+            node_first.AddParent(parent_two);
+            node_first.Report();
+            skillWeb.AddNode(node_first);
+            skillWeb.AddNode(parent_one);
+            skillWeb.AddNode(parent_two);
+
+            DeveloperConsole.Instance.ItemManager.AddCommand("TestUpdateSkills", new ConsoleCommandHandler(TestUpdateSkills));
+            DeveloperConsole.Instance.ItemManager.AddCommand("TestUpdateSkills2", new ConsoleCommandHandler(TestUpdateSkills2));
+            DeveloperConsole.Instance.ItemManager.AddCommand("TestUpdateSkills3", new ConsoleCommandHandler(TestUpdateSkills3));
+        }
+
+        [ConsoleMethod]
+        public object TestUpdateSkills(object[] aParams)
+        {
+            SkillNode node = skillWeb.Nodes.First();
+            SkillPointSet skillPointSet = new SkillPointSet(8, 10);
+            skillPointSet.Report();
+            node.UpdateValues(skillPointSet);
+            skillPointSet.Report();
+            Console.WriteLine("");
+
+            return null;
+        }
+
+        [ConsoleMethod]
+        public object TestUpdateSkills2(object[] aParams)
+        {
+            SkillNode node = skillWeb.Nodes.First();
+            SkillPointSet skillPointSet = new SkillPointSet(8, 10);
+
+            return null;
+        }
+
+        [ConsoleMethod]
+        public object TestUpdateSkills3(object[] aParams)
+        {
+            SkillNode node = skillWeb.Nodes.First();
+            SkillPointSet skillPointSet = new SkillPointSet(8, 10);
+            skillPointSet.Report();
+            node.UpdateValues(skillPointSet);
+            skillPointSet.Report();
+            Console.WriteLine("");
+
+            return null;
         }
 
         protected void InitializeMap()
@@ -132,6 +180,7 @@ namespace DefineYourself
             campus.Color = new Color(1.0f, 0.0f, 0.0f);
             campus.DrawShape = Actor.ActorDrawShape.Square;
             World.Instance.Add(campus);
+
 
 
             // tech web/tree panel
@@ -329,7 +378,6 @@ namespace DefineYourself
                     MusicState.Instance.ActiveSong = 0;
                 }
             }
-
 
         }
 
