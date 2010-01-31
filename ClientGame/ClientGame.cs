@@ -17,7 +17,7 @@ using AngelXNA.Messaging;
 using AngelXNA;
 using AngelXNA.Actors;
 using AngelXNA.Infrastructure;
-using AngelXNA.Infrastructure.Logging;
+//using AngelXNA.Infrastructure.Logging;
 
 using DefineYourself.Skills;
 
@@ -26,7 +26,8 @@ namespace DefineYourself
     public class MessageObject
     {
         public Actor bldg { get; set; }
-        public Actor play { get; set; }    
+        public Actor play { get; set; }
+        public Boolean booly;
     };
 
     /// <summary>
@@ -39,6 +40,8 @@ namespace DefineYourself
         SkillWeb skillWeb;
         List<Actor> buildingList;
         TextActor text, text2;
+        Boolean p1Earning = false;
+        Boolean p2Earning = false;
 
         public ClientGame()
         {
@@ -288,6 +291,7 @@ namespace DefineYourself
             text2.Name = "Tree";
             World.Instance.Add(text2);
             Switchboard.Instance["Collision"] += new MessageHandler(x => TreeListener(x.Sender));
+            Switchboard.Instance["SkillUpdate"] += new MessageHandler(x => UpdateListener(x.Sender));
 
             SoundState.Instance.SoundOff();
             
@@ -374,6 +378,8 @@ namespace DefineYourself
             return null;
         }
 
+        // ***************************************************************************************************************************
+
         // When a Collision message is broadcast, this updates the Tree TextActor with the name of the building that was collided with
         public object TreeListener(object aParams)
         {
@@ -387,6 +393,38 @@ namespace DefineYourself
             }
             return null;
         }
+
+        public object UpdateListener(object aParams)
+        {
+            if (((MessageObject)aParams).play.Name == "Player 1")
+            {
+                if (((MessageObject)aParams).booly)
+                {
+                    text.DisplayString = "P1 Updating!";
+                    p1Earning = true;
+                }
+                else
+                {
+                    text.DisplayString = "P1 not earning";
+                    p1Earning = false;
+                }
+            }
+            else
+            {
+                if (((MessageObject)aParams).booly)
+                {
+                    text2.DisplayString = "P2 Updating!";
+                    p2Earning = true;
+                }
+                else
+                {
+                    text2.DisplayString = "P2 not earning";
+                    p2Earning = false;
+                }
+            }
+            return null;
+        }
+
 
         // Checks every tick whether Player 1 intersects a building
         protected void PlayerAtBuilding()
