@@ -25,31 +25,8 @@ namespace DefineYourself
 {
     public class MessageObject
     {
-        public Actor building;
-        public Actor player;
-
-        public Actor getBuilding()
-        {
-            return building;
-        }
-
-        protected void setBuilding(object b)
-        {
-            building = (Actor)b;
-            return;
-        }
-
-        public Actor getPlayer()
-        {
-            return player;
-        }
-
-        protected void setPlayer(object p)
-        {
-            player = (Actor)p;
-            return;
-        }
-    
+        public Actor bldg { get; set; }
+        public Actor play { get; set; }    
     };
 
     /// <summary>
@@ -61,7 +38,7 @@ namespace DefineYourself
         SpriteBatch spriteBatch;
         SkillWeb skillWeb;
         List<Actor> buildingList;
-        TextActor text;
+        TextActor text, text2;
 
         public ClientGame()
         {
@@ -111,6 +88,7 @@ namespace DefineYourself
             // TODO: Add your initialization logic here
 
             MusicState.Instance.Play();
+            MusicState.Instance.Stop();
 
             base.Initialize();
         }
@@ -304,6 +282,13 @@ namespace DefineYourself
             World.Instance.Add(text);
             Switchboard.Instance["Collision"] += new MessageHandler(x => TreeListener(x.Sender));
 
+            // tech listener
+            text2 = new TextActor();
+            text2.Position = new Vector2(256.0f, 100.0f);
+            text2.Name = "Tree";
+            World.Instance.Add(text2);
+            Switchboard.Instance["Collision"] += new MessageHandler(x => TreeListener(x.Sender));
+
             SoundState.Instance.SoundOff();
             
         }
@@ -392,7 +377,14 @@ namespace DefineYourself
         // When a Collision message is broadcast, this updates the Tree TextActor with the name of the building that was collided with
         public object TreeListener(object aParams)
         {
-            text.DisplayString = ((Actor)aParams).Name;
+            if (((MessageObject)aParams).play.Name == "Player 1")
+            {
+                text.DisplayString = ((MessageObject)aParams).bldg.Name;
+            }
+            else
+            {
+                text2.DisplayString = ((MessageObject)aParams).bldg.Name;
+            }
             return null;
         }
 
@@ -404,22 +396,54 @@ namespace DefineYourself
             //Actor b1 = Actor.GetNamed("Building 1");
             foreach (Actor b1 in buildingList) {
                 // if the player is completely within the boundary of the building, it broadcasts a message
-                if  ((p1.Bounds.Min.X > b1.Bounds.Min.X && p1.Bounds.Max.X < b1.Bounds.Max.X) &&
-                    ((p1.Bounds.Min.Y > b1.Bounds.Min.Y && p1.Bounds.Max.Y < b1.Bounds.Max.Y)))
+                if  ((p1.Bounds.Max.X > b1.Bounds.Min.X && p1.Bounds.Min.X < b1.Bounds.Max.X) &&
+                    ((p1.Bounds.Max.Y > b1.Bounds.Min.Y && p1.Bounds.Min.Y < b1.Bounds.Max.Y)))
                 {
                    // Log.Instance.Log("Collision with " + b1.Name);
                     //text.DisplayString = b1.Name;
-                    Switchboard.Instance.Broadcast(new Message("Collision", b1));
+                    MessageObject mo = new MessageObject();//(b1, p1);
+                    mo.bldg = b1;
+                    mo.play = p1;
+                    
+                    Switchboard.Instance.Broadcast(new Message("Collision", mo));
                     //SoundState.Instance.SoundResume();
                     //SoundState.Instance.PlayPickupSound(new GameTime());
-                    MusicState.Instance.ActiveSong = 1;
+                   // MusicState.Instance.ActiveSong = 1;
                     break;
                 }
                 else
                 {
                     text.DisplayString = "Tree";
                    // SoundState.Instance.SoundOff();
-                    MusicState.Instance.ActiveSong = 0;
+                   // MusicState.Instance.ActiveSong = 0;
+                }
+            }
+
+            Actor p2 = Actor.GetNamed("Player 2");
+            //Actor b1 = Actor.GetNamed("Building 1");
+            foreach (Actor b1 in buildingList)
+            {
+                // if the player is completely within the boundary of the building, it broadcasts a message
+                if  ((p2.Bounds.Max.X > b1.Bounds.Min.X && p2.Bounds.Min.X < b1.Bounds.Max.X) &&
+                    ((p2.Bounds.Max.Y > b1.Bounds.Min.Y && p2.Bounds.Min.Y < b1.Bounds.Max.Y)))
+                {
+                    // Log.Instance.Log("Collision with " + b1.Name);
+                    //text.DisplayString = b1.Name;
+                    MessageObject mo = new MessageObject();//(b1, p1);
+                    mo.bldg = b1;
+                    mo.play = p2;
+
+                    Switchboard.Instance.Broadcast(new Message("Collision", mo));
+                    //SoundState.Instance.SoundResume();
+                    //SoundState.Instance.PlayPickupSound(new GameTime());
+                   // MusicState.Instance.ActiveSong = 1;
+                    break;
+                }
+                else
+                {
+                    text2.DisplayString = "Tree";
+                    // SoundState.Instance.SoundOff();
+                   // MusicState.Instance.ActiveSong = 0;
                 }
             }
 
